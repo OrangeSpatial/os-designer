@@ -7,4 +7,5 @@ explorations
 TODOs.md
 *.log
 .idea
+.vscode
 .eslintcache
