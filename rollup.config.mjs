@@ -72,8 +72,7 @@ function createConfig(format, output, plugins = []) {
     // Global and Browser ESM builds inlines everything so that they can be
     // used alone.
     external: [
-      ...["path", "fs", "os", "http"],
-      ...Object.keys(pkg.dependencies || {}),
+      ...["path", "fs", "os", "http", 'vue', 'react'],
       ...Object.keys(pkg.peerDependencies || {}),
       ...Object.keys(pkg.devDependencies || {}),
     ],
