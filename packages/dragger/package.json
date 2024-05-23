@@ -1,0 +1,34 @@
+{
+  "name": "@oragspatl/dragger",
+  "version": "0.1.0",
+  "description": "a draggable library",
+  "types": "dist/dragger.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/es/index.mjs",
+      "require": "./dist/lib/index.js",
+      "default": "./dist/es/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build && tsc && tsc -p tsconfig.json --declarationDir dist/lib"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OrangeSpatial/os-designer"
+  },
+  "keywords": [
+    "draggable",
+    "drag",
+    "os"
+  ],
+  "author": "orangeSpatial",
+  "license": "MIT"
+}

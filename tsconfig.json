@@ -19,7 +19,9 @@
     "lib": ["esnext", "dom"],
     "types": ["node"],
     "rootDir": ".",
-    "paths": {}
+    "paths": {
+      "@oragspatl/*": ["packages/*/src"]
+    }
   },
   "include": ["packages/*/src"],
   "exclude": ["node_modules"],
