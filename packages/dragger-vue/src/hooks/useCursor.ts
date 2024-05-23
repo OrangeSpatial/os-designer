@@ -1,4 +1,4 @@
-import { Mouse, Keyboard } from '@os/dragger'
+import { Mouse, Keyboard } from '@oragspatl/dragger'
 import { onBeforeUnmount, onMounted } from 'vue'
 
 let mouse = new Mouse()

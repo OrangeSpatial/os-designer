@@ -9,7 +9,7 @@ import {
   getCursorPositionInDtdNode,
   getLayoutNodeInContainer,
   initStyle
-} from '@os/dragger'
+} from '@oragspatl/dragger'
 import AuxSelection from './selection/Index.vue'
 import { useCursor } from "../hooks/useCursor";
 

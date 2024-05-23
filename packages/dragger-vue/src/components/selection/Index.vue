@@ -7,7 +7,7 @@ import {
     cursorAtContainerEdge,
     getCursorPositionInDtdNode,
     getElementByDtdId,
-} from '@os/dragger';
+} from '@oragspatl/dragger';
 import { useCursor } from "../../hooks/useCursor";
 
 

@@ -2,7 +2,7 @@
 import {nextTick, onBeforeUnmount, onMounted, ref} from 'vue'
 import DtdRecursion from './DtdRecursion.vue'
 import DtdItem from './DtdItem.vue'
-import { DtdNode, getNode, DragEventType, DragNodeType, ISelectNode} from '@os/dragger'
+import { DtdNode, getNode, DragEventType, DragNodeType, ISelectNode} from '@oragspatl/dragger'
 import {useCursor} from "../hooks/useCursor";
 
 defineOptions({

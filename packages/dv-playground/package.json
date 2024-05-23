@@ -1,20 +1,20 @@
 {
-  "name": "@os-designer/dv-playground",
+  "name": "@oragspatl-designer/dv-playground",
   "version": "1.0.0",
-  "description": "",
+  "description": "dragger-vue playground",
   "private": true,
   "main": "index.js",
   "scripts": {
     "dev": "vite"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "orangeSpatial",
+  "license": "MIT",
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4"
   },
   "dependencies": {
-    "@os/dragger-vue": "workspace:*",
+    "@oragspatl/dragger-vue": "workspace:*",
     "vue": "^3.4.27"
   }
 }

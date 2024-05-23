@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { DTD_BASE_KEY, DragToDropItemProps } from '@os/dragger';
+import { DTD_BASE_KEY, DragToDropItemProps } from '@oragspatl/dragger';
 const props = defineProps<DragToDropItemProps>()
 const customProps = computed( () => {
   return {

@@ -20,7 +20,7 @@
     "types": ["node"],
     "rootDir": ".",
     "paths": {
-      "@os/*": ["packages/*/src"]
+      "@oragspatl/*": ["packages/*/src"]
     }
   },
   "include": ["packages/*/src"],

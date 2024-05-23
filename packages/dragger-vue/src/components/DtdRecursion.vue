@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { DtdNode } from "@os/dragger";
+import { DtdNode } from "@oragspatl/dragger";
 import DtdItem from "./DtdItem.vue";
 
 defineOptions({

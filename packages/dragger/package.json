@@ -1,18 +1,21 @@
 {
-  "name": "@os/dragger",
+  "name": "@oragspatl/dragger",
   "version": "0.1.0",
-  "description": "",
+  "description": "a draggable library",
   "types": "dist/dragger.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/dragger.esm-bundler.js",
-      "require": "./dist/dragger.cjs.js",
-      "default": "./dist/dragger.esm-bundler.js"
+      "import": "./dist/es/index.mjs",
+      "require": "./dist/lib/index.js",
+      "default": "./dist/es/index.mjs"
     }
   },
   "files": [
     "dist"
   ],
+  "scripts": {
+    "build": "vite build && tsc && tsc -p tsconfig.json --declarationDir dist/lib"
+  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
@@ -21,20 +24,11 @@
     "type": "git",
     "url": "https://github.com/OrangeSpatial/os-designer"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "buildOptions": {
-    "name": "dragger",
-    "filename": "dragger",
-    "formats": [
-      "esm-bundler",
-      "esm-browser",
-      "cjs",
-      "global"
-    ]
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "keywords": [
+    "draggable",
+    "drag",
+    "os"
+  ],
+  "author": "orangeSpatial",
+  "license": "MIT"
 }

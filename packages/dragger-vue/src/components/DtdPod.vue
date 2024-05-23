@@ -4,7 +4,7 @@ import {
   cursorAtContainerEdgeType,
   getCursorPositionInDtdNode,
   getLayoutNodeInContainer
-} from '@os/dragger'
+} from '@oragspatl/dragger'
 import { initCursor } from '../hooks/useCursor'
 import DtdAuxTool from './DtdAuxTool.vue'
 import DtdGhost from './DtdGhost.vue'

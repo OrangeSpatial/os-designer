@@ -1,8 +1,7 @@
 {
-  "name": "@os/dragger-vue",
+  "name": "@oragspatl/dragger-vue",
   "version": "0.1.0",
-  "private": true,
-  "description": "",
+  "description": "A draggable component for low code, based on vue3 and vite.",
   "types": "dist/types/index.d.ts",
   "module": "dist/es/index.mjs",
   "exports": {
@@ -25,14 +24,19 @@
   "scripts": {
     "build": "vite build"
   },
-  "buildOptions": {
-    "vite": true
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "vue",
+    "dragger",
+    "os-designer",
+    "low code",
+    "drag and drop",
+    "vue3",
+    "vite"
+  ],
+  "author": "orangeSpatial",
+  "license": "MIT",
   "dependencies": {
-    "@os/dragger": "workspace:*",
+    "@oragspatl/dragger": "workspace:*",
     "vue": "^3.4.27"
   },
   "devDependencies": {
