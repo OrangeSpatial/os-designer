@@ -1,24 +1,32 @@
 {
-  "name": "@os/drager",
+  "name": "@os/dragger",
   "version": "0.1.0",
   "description": "",
-  "types": "dist/drager.d.ts",
+  "types": "dist/dragger.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/drager.esm-bundler.js",
-      "require": "./dist/drager.cjs.js",
-      "default": "./dist/drager.esm-bundler.js"
+      "import": "./dist/dragger.esm-bundler.js",
+      "require": "./dist/dragger.cjs.js",
+      "default": "./dist/dragger.esm-bundler.js"
     }
   },
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OrangeSpatial/os-designer"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "buildOptions": {
-    "name": "drager",
-    "filename": "drager",
+    "name": "dragger",
+    "filename": "dragger",
     "formats": [
       "esm-bundler",
       "esm-browser",

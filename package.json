@@ -6,6 +6,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "play": "pnpm --filter @os-designer/dv-playground dev",
     "postinstall": "simple-git-hooks",
     "commit": "cz",
     "build": "node scripts/build.js",
