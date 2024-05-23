@@ -1,10 +1,23 @@
 {
   "name": "@os/drager-vue",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "types": "dist/types/index.d.ts",
+  "module": "dist/es/index.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/es/index.mjs",
+      "require": "./dist/lib/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "vite build"
+  },
+  "buildOptions": {
+    "vite": true
   },
   "keywords": [],
   "author": "",
@@ -12,5 +25,9 @@
   "dependencies": {
     "@os/drager": "workspace:*",
     "vue": "^3.4.27"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "vite-plugin-dts": "^3.9.1"
   }
 }

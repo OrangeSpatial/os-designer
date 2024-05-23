@@ -21,3 +21,5 @@ export function useCursor() {
     selectedNodes: mouse.selectedNodes
   }
 }
+
+export const keyboard = mouse.keyboard

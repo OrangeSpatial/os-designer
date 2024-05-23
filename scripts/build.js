@@ -37,6 +37,12 @@ const build = async function (target) {
   // 编译前移除之前生成的产物
   await rm(`${pkgDir}/dist`, { recursive: true, force: true })
 
+  // vue组件库使用vite打包
+  if (pkg.buildOptions.vite) {
+    await execa('vite', ['build'], { cwd: pkgDir, stdio: 'inherit' })
+    return
+  }
+
   // -c 指使用配置文件 默认为rollup.config.js
   // --environment 向配置文件传递环境变量 配置文件通过proccess.env.获取
   await execa(

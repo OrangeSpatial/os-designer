@@ -1,6 +1,6 @@
 {
   "name": "@os/drager",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "types": "dist/drager.d.ts",
   "exports": {
@@ -10,6 +10,9 @@
       "default": "./dist/drager.esm-bundler.js"
     }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
