@@ -1,0 +1,42 @@
+{
+  "name": "@os/dragger-vue",
+  "version": "0.1.0",
+  "private": true,
+  "description": "",
+  "types": "dist/types/index.d.ts",
+  "module": "dist/es/index.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/es/index.mjs",
+      "require": "./dist/lib/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OrangeSpatial/os-designer"
+  },
+  "scripts": {
+    "build": "vite build"
+  },
+  "buildOptions": {
+    "vite": true
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@os/dragger": "workspace:*",
+    "vue": "^3.4.27"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "vite-plugin-dts": "^3.9.1"
+  }
+}
