@@ -1,23 +1,12 @@
 import { uid } from '../common'
 import { DragNodeType } from './Mouse'
 
-export interface IDtdNode {
+interface IDtdNode {
   dragId?: string
   droppable?: boolean
   dragType?: DragNodeType
   props?: Record<string | number | symbol, any>
   children: IDtdNode[]
-}
-
-export enum NodeInPosition {
-  TOP = 'top',
-  RIGHT = 'right',
-  BOTTOM = 'bottom',
-  LEFT = 'left',
-  TOP_RIGHT = 'top_right',
-  BOTTOM_RIGHT = 'bottom_right',
-  BOTTOM_LEFT = 'bottom_left',
-  TOP_LEFT = 'top_left'
 }
 
 export enum NodeLayout {
@@ -132,10 +121,10 @@ export function deleteNode(node: DtdNode | DtdNode[], deleteCache = false) {
 
 /**
  * 插入到指定位置
- * @param targetNode - 被插入节点
- * @param sourceNodes - 待插入节点
- * @param insertBefore - 是否插入到目标节点之前
- * @param type - 拖拽类型
+ * @param targetNode 被插入节点
+ * @param sourceNodes 待插入节点
+ * @param insertBefore
+ * @param type
  */
 export function insertNode(
   targetNode: DtdNode,
@@ -146,6 +135,7 @@ export function insertNode(
   if (!targetNode || !sourceNodes) return
   const parent = targetNode.parent || targetNode
   if (type === DragNodeType.MOVE) {
+    console.log(`insertNode: ${targetNode.dragId}`)
     // 删除原节点
     deleteNode(sourceNodes)
   }
@@ -167,11 +157,11 @@ export function insertNode(
 
 /**
  * 插入到容器
- * @param targetNode - 容器节点
- * @param sourceNodes - 待插入节点
- * @param insertBefore - 是否插入到目标节点之前
- * @param type - 拖拽类型
- * @returns - 无
+ * @param targetNode
+ * @param sourceNodes
+ * @param insertBefore
+ * @param type
+ * @returns
  */
 export function insertNodeInContainer(
   targetNode: DtdNode,

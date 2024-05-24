@@ -8,11 +8,11 @@ import {
 import { initCursor } from '../hooks/useCursor'
 import DtdAuxTool from './DtdAuxTool.vue'
 import DtdGhost from './DtdGhost.vue'
-import { onBeforeUnmount, ref, onMounted } from 'vue';
-import { useKeyboard } from "../hooks/useKeyboard";
+import { onBeforeUnmount, ref, onMounted } from 'vue'
+import { useKeyboard } from '../hooks/useKeyboard'
 
 defineOptions({
-  name: 'DtdPod',
+  name: 'DtdPod'
 })
 
 const emits = defineEmits<{
@@ -121,3 +121,4 @@ onBeforeUnmount(() => {
   overflow: auto;
 }
 </style>
+

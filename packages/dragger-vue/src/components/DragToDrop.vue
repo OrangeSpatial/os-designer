@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import {nextTick, onBeforeUnmount, onMounted, ref} from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import DtdRecursion from './DtdRecursion.vue'
 import DtdItem from './DtdItem.vue'
-import { DtdNode, getNode, DragEventType, DragNodeType, ISelectNode} from '@oragspatl/dragger'
-import {useCursor} from "../hooks/useCursor";
+import { DtdNode, getNode, DragEventType, DragNodeType, ISelectNode } from '@oragspatl/dragger'
+import { useCursor } from '../hooks/useCursor'
 
 defineOptions({
-  name: 'DragToDrop',
+  name: 'DragToDrop'
 })
 
 const props = withDefaults(defineProps<{
@@ -25,17 +25,18 @@ const { mouse } = useCursor()
 
 const dragEndHandle = (e: MouseEvent, targetNode?: DtdNode) => {
   if (!mouse.dataTransfer.length) return
-  if (targetNode && mouse.dataTransfer.find(node => node.isParentOf(targetNode))) return
+  if (targetNode && mouse.dataTransfer.find((node: DtdNode) => node.isParentOf(targetNode))) return
   nextTick(() => {
     emits('change', getData())
     dtdData.value = dtdData.value.clone()
+    mouse.setSelectedNodes(
+      mouse.dataTransfer.map((node: DtdNode) => ({ node: getNode(node.dragId), e } as ISelectNode)),
+      e,
+      targetNode
+    )
   })
-  mouse.setSelectedNodes(
-    mouse.dataTransfer.map(node => ({ node: getNode(node.dragId), e } as ISelectNode)),
-    e,
-    targetNode
-  );
 }
+
 function getData() {
   return DtdNode.toList(dtdData.value)
 }

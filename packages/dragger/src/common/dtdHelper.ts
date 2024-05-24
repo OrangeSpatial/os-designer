@@ -1,5 +1,4 @@
-import { NodeLayout } from '../model/DtdNode'
-import { ICursorPosition } from '../model/Mouse'
+import { NodeLayout, ICursorPosition } from '../model'
 import { DTD_BASE_KEY, edgeGap } from './presets'
 
 export function getClosestDtdNode(e: MouseEvent) {
@@ -110,8 +109,8 @@ export function sortMouseEvents(e1: MouseEvent, e2: MouseEvent) {
 
 /**
  * 判断鼠标所在是否是容器的边缘，且返回边缘类型
- * @param container - 容器
- * @param e - 鼠标事件
+ * @param DOM 容器
+ * @param MouseEvent 鼠标事件
  * @returns 边缘类型
  *
  */

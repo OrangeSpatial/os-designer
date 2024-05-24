@@ -1,11 +1,11 @@
 import { DtdNode, getNode } from './DtdNode'
 import {
-  DTD_BASE_KEY,
   getClosestDtdNode,
   removeGhostElStyle,
   setMoveElStyle,
   sortMouseEvents,
-  isValidNumber
+  isValidNumber,
+  DTD_BASE_KEY
 } from '../common'
 import { Keyboard } from './Keyboard'
 
@@ -13,6 +13,7 @@ export enum CursorStatus {
   Normal = 'NORMAL',
   Dragging = 'DRAGGING'
 }
+
 export enum CursorDragType {
   Grabbing = 'GRABBING',
   Move = 'MOVE',
@@ -235,6 +236,7 @@ export class Mouse {
       }
     }
   }
+
   onDragMove(e: MouseEvent) {
     if (this.dragStatus !== CursorStatus.Dragging) return
     e.preventDefault()

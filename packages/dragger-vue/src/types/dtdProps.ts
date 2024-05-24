@@ -1,4 +1,4 @@
-import { DtdNode } from '../model'
+import { DtdNode } from '@oragspatl/dragger'
 
 export interface DragToDropItemProps {
   data: DtdNode
