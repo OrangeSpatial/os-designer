@@ -11,7 +11,7 @@ import {
   initStyle
 } from '@oragspatl/dragger'
 import AuxSelection from './selection/Index.vue'
-import { useCursor } from "../hooks/useCursor";
+import { useCursor } from '../hooks/useCursor'
 
 const props = withDefaults(defineProps<{
   insertionBgColor?: string
@@ -28,7 +28,7 @@ const droppingCoverRectStyle = ref<CSSProperties>(initStyle)
 
 const auxToolRef = ref<HTMLElement>()
 const auxToolStyle = ref<CSSProperties>({
-  transform: 'translate(0, 0)',
+  transform: 'translate(0, 0)'
 })
 
 watch(() => props.scrollPosition, (val) => {
@@ -54,7 +54,7 @@ function draggingHandler(e: MouseEvent, targetNode?: DtdNode) {
   const { x: pX, y: pY } = container.getBoundingClientRect()
   const sourceNode = mouse.dataTransfer
   if (!sourceNode?.length) return
-  const parentNode = sourceNode.find(node => node.isParentOf(targetNode))
+  const parentNode = sourceNode.find((node: DtdNode) => node.isParentOf(targetNode))
   currentTargetNode.value = targetNode
   const { isTop, isLeft, rect } = positionObj
   const isVertical = getLayoutNodeInContainer(positionObj.targetEl) === NodeLayout.VERTICAL
@@ -115,7 +115,7 @@ function resetInsertionStyle() {
     left: 0,
     height: 0,
     width: 0,
-    transform: `perspective(1px) translate3d(0px,0px,0px)`,
+    transform: `perspective(1px) translate3d(0px,0px,0px)`
   }
 }
 
@@ -147,7 +147,9 @@ onBeforeUnmount(() => {
 
 <template>
   <div :style="auxToolStyle" class="dtd-aux-tool" ref="auxToolRef">
-    <div class="dtd-aux-insertion" :style="{ ...insertionStyle, backgroundColor: insertionBgColor }"></div>
+    <div class="dtd-aux-insertion"
+         :style="{...insertionStyle, backgroundColor: insertionBgColor}"
+    ></div>
     <div class="dtd-aux-dashed-box"></div>
     <aux-selection :scrollPosition :parentEl="auxToolRef" />
     <div v-if="mouse.dataTransfer.length" class="dtd-aux-cover-rect dragging" :style="draggingCoverRectStyle"></div>

@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { DTD_BASE_KEY, DragToDropItemProps } from '@oragspatl/dragger';
+import { computed } from 'vue'
+import { DTD_BASE_KEY } from '@oragspatl/dragger'
+import { DragToDropItemProps } from '../types/dtdProps'
+
 const props = defineProps<DragToDropItemProps>()
-const customProps = computed( () => {
+const customProps = computed(() => {
   return {
     [DTD_BASE_KEY]: props.disabled ? undefined : props.data.dragId
   }
@@ -27,6 +29,7 @@ const customProps = computed( () => {
   border: 1px solid #ccc;
   background-color: white;
 }
+
 .drag-disabled {
   opacity: 0.5;
 }
