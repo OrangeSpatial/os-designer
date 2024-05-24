@@ -1,6 +1,6 @@
 {
   "name": "@oragspatl/dragger",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "a draggable library",
   "types": "dist/dragger.d.ts",
   "exports": {
