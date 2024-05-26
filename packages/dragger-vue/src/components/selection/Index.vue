@@ -62,9 +62,6 @@ function updateSelection(e?: MouseEvent, targetNode?: DtdNode) {
   if (!container) return
   // 容器偏移量
   const { x: offsetX, y: offsetY } = container.getBoundingClientRect()
-  // 视窗偏移量
-  // const d_x = e.pageX - e.clientX
-  // const d_y = e.pageY - e.clientY
   // 节点对应的dom
   let selectedDoms: (Element | null)[]
 
@@ -97,8 +94,8 @@ function updateSelection(e?: MouseEvent, targetNode?: DtdNode) {
   selectedDoms.map((dom, index) => {
     const rect = dom?.getBoundingClientRect()
     if (!rect) return
-    const left = rect.left - offsetX
-    const top = rect.top - offsetY
+    const left = rect.left - offsetX - props.scrollPosition.scrollLeft
+    const top = rect.top - offsetY - props.scrollPosition.scrollTop
     const width = rect.width
     const height = rect.height
     selectNodes.value[index].startLeft = left
@@ -117,6 +114,8 @@ function resetSelectionRectStyle() {
 }
 
 function updateSelectionRectStyle() {
+  console.log('updateSelectionRectStyle', props.scrollPosition);
+  
   selectNodes.value.map(item => {
     const dx = props.scrollPosition.scrollLeft - item.startPosition.x
     const dy = props.scrollPosition.scrollTop - item.startPosition.y

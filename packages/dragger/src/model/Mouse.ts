@@ -31,7 +31,8 @@ export enum DragEventType {
   Dragging = 'dragging',
   DragEnd = 'dragend',
   Select = 'select',
-  Click = 'click'
+  Click = 'click',
+  Move = 'move'
 }
 
 export enum DragNodeType {
@@ -98,7 +99,7 @@ export class Mouse {
 
   dataTransfer: DtdNode[] = []
 
-  startEvent: MouseEvent = new MouseEvent('')
+  startEvent: MouseEvent | null = null
   startTime: number = 0
 
   eventCallbacks = new Map<
@@ -184,6 +185,7 @@ export class Mouse {
   }
 
   isValidClick(e: MouseEvent) {
+    if (!this.startEvent) return false
     const distance = Math.sqrt(
       Math.pow(e.pageX - this.startEvent.pageX, 2) +
         Math.pow(e.pageY - this.startEvent.pageY, 2)
@@ -192,7 +194,13 @@ export class Mouse {
     return distance <= 3 && timeDelta < 300
   }
 
+  isWillDrag(e: MouseEvent) {
+    const dragElement = getClosestDtdNode(e)
+    return !!dragElement?.getAttribute(DTD_BASE_KEY)
+  }
+
   isValidDragStart(e: MouseEvent) {
+    if (!this.startEvent) return false
     const distance = Math.sqrt(
       Math.pow(e.pageX - this.startEvent.pageX, 2) +
         Math.pow(e.pageY - this.startEvent.pageY, 2)
@@ -239,7 +247,6 @@ export class Mouse {
 
   onDragMove(e: MouseEvent) {
     if (this.dragStatus !== CursorStatus.Dragging) return
-    e.preventDefault()
     this.setCursorPosition({
       pageX: e.pageX,
       pageY: e.pageY,
@@ -287,13 +294,18 @@ export class Mouse {
       this.onDragStart(e)
       this.onDragMove(e)
     }
+    this.eventCallbacks.get(DragEventType.Move)?.forEach(cb => {
+      cb(e)
+    })
   }
 
   public down = (e: MouseEvent) => {
     this.startEvent = e
     this.startTime = Date.now()
-    document.addEventListener('mousemove', this.move)
-    document.addEventListener('mouseup', this.up)
+    if (this.isWillDrag(e)) {
+      e.preventDefault()
+    }
+    window.addEventListener('mouseup', this.up)
   }
 
   public up = (e: MouseEvent) => {
@@ -315,8 +327,8 @@ export class Mouse {
         cb(e, targetNode)
       })
     }
+    this.startEvent = null
     this.onDragEnd(e)
-    document.removeEventListener('mousemove', this.move)
-    document.removeEventListener('mouseup', this.up)
+    window.removeEventListener('mouseup', this.up)
   }
 }

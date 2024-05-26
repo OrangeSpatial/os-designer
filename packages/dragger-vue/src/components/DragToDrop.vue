@@ -2,8 +2,10 @@
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import DtdRecursion from './DtdRecursion.vue'
 import DtdItem from './DtdItem.vue'
+import DtdAuxTool from './DtdAuxTool.vue'
 import { DtdNode, getNode, DragEventType, DragNodeType, ISelectNode } from '@oragspatl/dragger'
 import { useCursor } from '../hooks/useCursor'
+import { cursorAtContainerEdgeType } from '@oragspatl/dragger'
 
 defineOptions({
   name: 'DragToDrop'
@@ -16,6 +18,8 @@ const props = withDefaults(defineProps<{
 }>(), {
   dragType: DragNodeType.MOVE
 })
+
+const rootRef = ref<HTMLElement>()
 
 const emits = defineEmits(['change'])
 
@@ -37,15 +41,44 @@ const dragEndHandle = (e: MouseEvent, targetNode?: DtdNode) => {
   })
 }
 
+const scrollPosition = ref({ scrollTop: 0, scrollLeft: 0 })
+
+function podScrollHandler(e: Event) {
+  const target = e.target as HTMLElement
+  if (rootRef.value !== target) return
+  scrollPosition.value = {
+    scrollTop: target.scrollTop,
+    scrollLeft: target.scrollLeft
+  }
+}
+
 function getData() {
   return DtdNode.toList(dtdData.value)
 }
 
+function draggingHandler(e: MouseEvent) {
+  const edgeType = cursorAtContainerEdgeType(rootRef.value!, e)
+  if (edgeType === 'top') {
+    rootRef.value!.scrollTop -= 10
+  } else if (edgeType === 'bottom') {
+    rootRef.value!.scrollTop += 10
+  } else if (edgeType === 'left') {
+    rootRef.value!.scrollLeft -= 10
+  } else if (edgeType === 'right') {
+    rootRef.value!.scrollLeft += 10
+  }
+}
+
 onMounted(() => {
+  rootRef.value && rootRef.value.addEventListener('scroll', podScrollHandler)
   mouse.on(DragEventType.DragEnd, dragEndHandle)
+  // 拖拽中，如果拖拽至顶部或底部，左右边缘，自动滚动
+  mouse.on(DragEventType.Dragging, draggingHandler)
 })
 onBeforeUnmount(() => {
+  rootRef.value && rootRef.value.removeEventListener('scroll', podScrollHandler)
   mouse.off(DragEventType.DragEnd, dragEndHandle)
+  mouse.off(DragEventType.Dragging, draggingHandler)
   DtdNode.clearCacheAll()
 })
 
@@ -63,16 +96,26 @@ defineExpose({
 </script>
 
 <template>
-  <dtd-item :data="dtdData" :disabled="dtdData.disabled" :class="!dtdData?.children?.length ? 'full' : ''">
-    <DtdRecursion :nodeClass :node="dtdData">
-      <template #default="{ item }">
-        <slot :item="item" />
-      </template>
-    </DtdRecursion>
-  </dtd-item>
+  <div ref="rootRef" class="dtd-render-root">
+    <dtd-item :data="dtdData" :disabled="dtdData.disabled" :class="!dtdData?.children?.length ? 'full' : ''">
+      <DtdRecursion :nodeClass :node="dtdData">
+        <template #default="{ item }">
+          <slot :item="item" />
+        </template>
+      </DtdRecursion>
+      <dtd-aux-tool v-if="dtdData.dragType===DragNodeType.MOVE" :scrollPosition />
+    </dtd-item>
+  </div>
 </template>
 
 <style scoped>
+.dtd-render-root {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
 .full {
   height: 100%;
   width: 100%;

@@ -4,6 +4,8 @@ import DtdPod from './components/DtdPod.vue'
 
 export * from './types'
 export * from './hooks'
+export * from './common'
+
 export const DragToDrop = withInstall(dtd, {
   DtdPod
 })

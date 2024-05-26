@@ -6,10 +6,12 @@ let mouse = new Mouse()
 export function initCursor(keyboard: Keyboard) {
   mouse = new Mouse(keyboard)
   onMounted(() => {
-    document.addEventListener('mousedown', mouse.down)
+    window.addEventListener('mousedown', mouse.down)
+    window.addEventListener('mousemove', mouse.move)
   })
   onBeforeUnmount(() => {
-    document.removeEventListener('mousedown', mouse.down)
+    window.removeEventListener('mousedown', mouse.down)
+    window.removeEventListener('mousemove', mouse.move)
   })
 
   return mouse

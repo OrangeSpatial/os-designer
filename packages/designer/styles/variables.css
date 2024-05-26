@@ -1,0 +1,29 @@
+
+/** 背景色 */
+:root {
+
+    --os-primary-color: #811ff1;
+    --os-primary-color-hover: #6a1ad6;
+    --os-primary-color-active: #5c159e;
+    --os-primary-color-disabled: #d9d9d9;
+
+    --os-primary-bg-color: #23272d;
+    --os-primary-bg-color-hover: #2d3138;
+
+    --os-operation-color: #8d96a5;
+    --os-operation-bg-color: #ffffff;
+    --os-operation-bg-color-hover: #2d3138;
+    --os-operation-bg-color-active: #1e2126;
+    --os-operation-bg-color-disabled: #1e2126;
+    --os-operation-border-color: #e1e1e1;
+
+    --os-workspace-color: #23272d;
+    --os-workspace-bg-color: #e1e1e1;
+
+    --os-header-bg-color: #23272d;
+    --os-header-color: #8d96a5;
+
+    --os-toolbar-width: 48px;
+    --os-header-height: 48px;
+    --os-operation-sidebar-width: 220px;
+}

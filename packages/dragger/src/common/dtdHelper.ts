@@ -49,7 +49,7 @@ export function setMoveElStyle(el: HTMLElement, position: ICursorPosition) {
   const { pageX, pageY } = position
   el.style.height = 'auto'
   el.style.width = 'auto'
-  el.style.transform = `perspective(1px) translate3d(${pageX}px, ${pageY}px, 0)`
+  el.style.transform = `perspective(1px) translate3d(${(pageX || 0) + 1}px, ${pageY}px, 0)`
 }
 
 export function removeGhostElStyle(el: HTMLElement) {

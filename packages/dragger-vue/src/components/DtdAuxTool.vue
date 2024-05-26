@@ -58,10 +58,10 @@ function draggingHandler(e: MouseEvent, targetNode?: DtdNode) {
   currentTargetNode.value = targetNode
   const { isTop, isLeft, rect } = positionObj
   const isVertical = getLayoutNodeInContainer(positionObj.targetEl) === NodeLayout.VERTICAL
-  const d_x = e.pageX - e.clientX
-  const d_y = e.pageY - e.clientY
-  const left = d_x + rect.left - pX
-  const top = d_y + rect.top - pY
+  const d_x = props.scrollPosition?.scrollLeft || 0
+  const d_y = props.scrollPosition?.scrollTop || 0
+  const left = rect.left - pX - d_x
+  const top = rect.top - pY - d_y
 
   const x = isVertical ? left : isLeft ? left : left + rect.width
   const y = isVertical ? isTop ? top : top + rect.height : top
@@ -94,7 +94,7 @@ function updateDraggingCoverRectStyle(dx: number, dy: number, pX: number, pY: nu
   const dragRect = mouse.dragElement?.getBoundingClientRect()
   if (dragRect) {
     draggingCoverRectStyle.value = {
-      transform: `perspective(1px) translate3d(${dx + dragRect.left - pX}px,${dy + dragRect.top - pY}px,0px)`,
+      transform: `perspective(1px) translate3d(${dragRect.left - pX - dx}px,${dragRect.top - pY - dy}px,0px)`,
       width: dragRect.width + 'px',
       height: dragRect.height + 'px'
     }
