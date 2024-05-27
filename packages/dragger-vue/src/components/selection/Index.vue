@@ -2,7 +2,7 @@
 import { CSSProperties, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {
   DTD_BASE_KEY, initStyle,
-  DragEventType,
+  MouseEventType,
   DtdNode,
   cursorAtContainerEdge,
   getCursorPositionInDtdNode,
@@ -133,10 +133,10 @@ watch(() => props.scrollPosition, () => {
 }, { deep: true })
 
 onMounted(() => {
-  mouse.on(DragEventType.Select, selectHandler)
+  mouse.on(MouseEventType.Select, selectHandler)
 })
 onBeforeUnmount(() => {
-  mouse.off(DragEventType.Select, selectHandler)
+  mouse.off(MouseEventType.Select, selectHandler)
 })
 </script>
 

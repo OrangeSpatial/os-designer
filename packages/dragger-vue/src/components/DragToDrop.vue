@@ -3,7 +3,7 @@ import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import DtdRecursion from './DtdRecursion.vue'
 import DtdItem from './DtdItem.vue'
 import DtdAuxTool from './DtdAuxTool.vue'
-import { DtdNode, getNode, DragEventType, DragNodeType, ISelectNode } from '@oragspatl/dragger'
+import { DtdNode, getNode, MouseEventType, DragNodeType, ISelectNode } from '@oragspatl/dragger'
 import { useCursor } from '../hooks/useCursor'
 import { cursorAtContainerEdgeType } from '@oragspatl/dragger'
 
@@ -71,14 +71,14 @@ function draggingHandler(e: MouseEvent) {
 
 onMounted(() => {
   rootRef.value && rootRef.value.addEventListener('scroll', podScrollHandler)
-  mouse.on(DragEventType.DragEnd, dragEndHandle)
+  mouse.on(MouseEventType.DragEnd, dragEndHandle)
   // 拖拽中，如果拖拽至顶部或底部，左右边缘，自动滚动
-  mouse.on(DragEventType.Dragging, draggingHandler)
+  mouse.on(MouseEventType.Dragging, draggingHandler)
 })
 onBeforeUnmount(() => {
   rootRef.value && rootRef.value.removeEventListener('scroll', podScrollHandler)
-  mouse.off(DragEventType.DragEnd, dragEndHandle)
-  mouse.off(DragEventType.Dragging, draggingHandler)
+  mouse.off(MouseEventType.DragEnd, dragEndHandle)
+  mouse.off(MouseEventType.Dragging, draggingHandler)
   DtdNode.clearCacheAll()
 })
 

@@ -8,6 +8,7 @@
                         <div class="dtd-item copy-item">{{ item.props?.name }}</div>
                     </template>
                 </DragToDrop>
+                <drag-bar position="end" direction="vertical" :range="[100, 300]"></drag-bar>
             </DesignerExplorer>
             <DesignerWorkspace>
                 <DragToDrop class="dtd-render-container" nodeClass="dtd-render-node-class" :data="data1" @change="d => data1 = d">
@@ -17,6 +18,7 @@
                 </DragToDrop>
             </DesignerWorkspace>
             <DesignerExplorer>
+                <drag-bar position="start" direction="vertical" :range="[100, 300]"></drag-bar>
                 right
             </DesignerExplorer>
             <template #ghost="{ items }">
@@ -27,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { genCls } from "@oragspatl/dragger-vue";
+import { genCls, DragBar } from "@oragspatl/dragger-vue";
 import DesignerExplorer from "./explorer/Index.vue";
 import DesignerWorkspace from "./workspace/Index.vue";
 import { ref } from "vue";

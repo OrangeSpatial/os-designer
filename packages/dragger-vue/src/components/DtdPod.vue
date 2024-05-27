@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {
-  DtdNode, NodeLayout, insertNode, insertNodeInContainer, DragEventType, DragNodeType, cursorAtContainerEdge,
+  DtdNode, NodeLayout, insertNode, insertNodeInContainer, MouseEventType, DragNodeType, cursorAtContainerEdge,
   getCursorPositionInDtdNode,
   getLayoutNodeInContainer
 } from '@oragspatl/dragger'
@@ -59,15 +59,15 @@ onMounted(() => {
   if (podRef.value) {
     mouse.setPodElement(podRef.value)
   }
-  mouse.on(DragEventType.Select, selectHandler)
-  mouse.on(DragEventType.DragStart, dragStartHandler)
-  mouse.on(DragEventType.DragEnd, dragEndHandler)
+  mouse.on(MouseEventType.Select, selectHandler)
+  mouse.on(MouseEventType.DragStart, dragStartHandler)
+  mouse.on(MouseEventType.DragEnd, dragEndHandler)
 })
 
 onBeforeUnmount(() => {
-  mouse.off(DragEventType.Select, selectHandler)
-  mouse.off(DragEventType.DragStart, dragStartHandler)
-  mouse.off(DragEventType.DragEnd, dragEndHandler)
+  mouse.off(MouseEventType.Select, selectHandler)
+  mouse.off(MouseEventType.DragStart, dragStartHandler)
+  mouse.off(MouseEventType.DragEnd, dragEndHandler)
 })
 </script>
 

@@ -10,17 +10,20 @@
 
 <script lang="ts" setup>
 import { ref, computed, reactive, onMounted, onUnmounted } from 'vue';
+import { useCursor } from '../hooks';
+import { MouseEventType, CursorStatus } from '@oragspatl/dragger'
 
-const props = withDefaults(defineProps<{
+interface DragBarProps {
     direction: 'horizontal' | 'vertical';
     position: 'start' | 'end';
     range: [number, number];
-}>(), {
-    range: [0, Infinity]
+};
+const props = withDefaults(defineProps<DragBarProps>(), {
+    range: [0, Infinity] as any
 });
 
 const dragBar = ref<HTMLElement | null>(null);
-
+const { mouse } = useCursor();
 const startDrag = ref(false);
 
 const dragBarStyle = computed(() => {
@@ -39,50 +42,53 @@ const dragBarStyle = computed(() => {
 
 const startPostion = reactive({ x: 0, y: 0, width: 0, height: 0 });
 const onMouseDown = (event: MouseEvent) => {
-    if (dragBar.value) {
+    if (dragBar.value && mouse.dragStatus === CursorStatus.Normal) {
+        mouse.setDragStatus(CursorStatus.Resizing)
         startDrag.value = true;
         dragBar.value.style.zIndex = '2';
         startPostion.x = event.clientX;
         startPostion.y = event.clientY;
         const parent = dragBar.value.parentElement;
         if (parent) {
-            startPostion.width = parent.offsetWidth;
-            startPostion.height = parent.offsetHeight;
+            const computedStyle = window.getComputedStyle(parent);
+            startPostion.width = parseFloat(computedStyle.width) || parent.offsetWidth;
+            startPostion.height = parseFloat(computedStyle.height) || parent.offsetHeight;
         }
     }
 };
 
 const onMouseMove = (event: MouseEvent) => {
-    if (dragBar.value && startDrag.value) {
-        const parent = dragBar.value.parentElement;
-        let dx = 0
-        let dy = 0
-        if (parent) {
-            const rect = parent.getBoundingClientRect();
-            dx = event.clientX - startPostion.x;
-            dy = event.clientY - startPostion.y;
+    if (!dragBar.value || !startDrag.value) return;
+    // prevent text selection
+    window.getSelection()?.removeAllRanges();
+    const parent = dragBar.value.parentElement;
+    if (!parent) return;
+    let dx = 0
+    let dy = 0
+    dx = event.clientX - startPostion.x;
+    dy = event.clientY - startPostion.y;
+
+    const calculations = {
+        horizontal: {
+            start: (dy: number) => startPostion.height - dy,
+            end: (dy: number) => startPostion.height + dy
+        },
+        vertical: {
+            start: (dx: number) => startPostion.width - dx,
+            end: (dx: number) => startPostion.width + dx
         }
+    };
 
-        const calculations = {
-            horizontal: {
-                start: (dy) => startPostion.height - dy,
-                end: (dy) => startPostion.height + dy
-            },
-            vertical: {
-                start: (dx) => startPostion.width - dx,
-                end: (dx) => startPostion.width + dx
-            }
-        };
+    const dimension = props.direction === 'horizontal' ? 'height' : 'width';
+    const change = props.direction === 'horizontal' ? dy : dx;
 
-        const dimension = props.direction === 'horizontal' ? 'height' : 'width';
-        const change = props.direction === 'horizontal' ? dy : dx;
-
-        const parentWidth = calculations[props.direction][props.position](change);
-        parent.style[dimension] = Math.min(Math.max(parentWidth, props.range[0]), props.range[1]) + 'px';
-    }
+    const parentWidth = calculations[props.direction][props.position](change);
+    parent.style[dimension] = Math.min(Math.max(parentWidth, props.range[0]), props.range[1]) + 'px';
 };
 
 const onMouseUp = (event: MouseEvent) => {
+    if (mouse.dragStatus !== CursorStatus.Resizing) return;
+    mouse.setDragStatus(CursorStatus.Normal)
     if (dragBar.value) {
         startDrag.value = false;
         dragBar.value.style.zIndex = '1';
@@ -90,26 +96,25 @@ const onMouseUp = (event: MouseEvent) => {
 };
 
 onMounted(() => {
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+    mouse.on(MouseEventType.Up, onMouseUp);
+    mouse.on(MouseEventType.Move, onMouseMove);
 });
 
 onUnmounted(() => {
-    document.removeEventListener('mousemove', onMouseMove);
-    document.removeEventListener('mouseup', onMouseUp);
+    mouse.off(MouseEventType.Up, onMouseUp);
+    mouse.off(MouseEventType.Move, onMouseMove);
 });
 </script>
 
 <style scoped>
 .drag-bar {
     position: absolute;
-    background-color: #f0f0f0;
     z-index: 1;
 }
 
 .drag-bar:hover {
     z-index: 2;
-    background-color: #e0e0e0;
+    background-color: var(--os-primary-bg-color);;
 }
 
 .horizontal {

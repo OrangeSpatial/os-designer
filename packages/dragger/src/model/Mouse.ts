@@ -11,7 +11,8 @@ import { Keyboard } from './Keyboard'
 
 export enum CursorStatus {
   Normal = 'NORMAL',
-  Dragging = 'DRAGGING'
+  Dragging = 'DRAGGING',
+  Resizing = 'RESIZING'
 }
 
 export enum CursorDragType {
@@ -26,13 +27,16 @@ export enum CursorDragType {
   Auto = 'AUTO'
 }
 
-export enum DragEventType {
+export enum MouseEventType {
   DragStart = 'dragstart',
   Dragging = 'dragging',
   DragEnd = 'dragend',
   Select = 'select',
+
   Click = 'click',
-  Move = 'move'
+  Move = 'move',
+  Down = 'down',
+  Up = 'up'
 }
 
 export enum DragNodeType {
@@ -89,7 +93,7 @@ export class Mouse {
   position: ICursorPosition = DEFAULT_POSITION
   dragStartPosition: ICursorPosition = DEFAULT_POSITION
   dragEndPosition: ICursorPosition = DEFAULT_POSITION
-  dragStatus: CursorStatus | string = CursorStatus.Normal
+  dragStatus: CursorStatus = CursorStatus.Normal
 
   dragElement: HTMLElement | null = null
 
@@ -124,7 +128,7 @@ export class Mouse {
     this.selectedNodes = nodes.sort((a, b) => {
       return sortMouseEvents(a.e, b.e)
     })
-    this.eventCallbacks.get(DragEventType.Select)?.forEach(cb => {
+    this.eventCallbacks.get(MouseEventType.Select)?.forEach(cb => {
       cb(e, targetNode)
     })
   }
@@ -138,7 +142,7 @@ export class Mouse {
     this.podElement = podElement
   }
 
-  public setDragStatus(status: CursorStatus | string): void {
+  public setDragStatus(status: CursorStatus): void {
     this.dragStatus = status
   }
 
@@ -158,7 +162,7 @@ export class Mouse {
   }
 
   on(
-    eventType: DragEventType,
+    eventType: MouseEventType,
     callback: (e: MouseEvent, targetNode?: DtdNode) => void
   ) {
     if (!eventType || !callback) return
@@ -171,7 +175,7 @@ export class Mouse {
   }
 
   off(
-    eventType: DragEventType,
+    eventType: MouseEventType,
     callback: (e: MouseEvent, targetNode: DtdNode) => void
   ) {
     if (!eventType || !callback) return
@@ -200,7 +204,11 @@ export class Mouse {
   }
 
   isValidDragStart(e: MouseEvent) {
-    if (!this.startEvent) return false
+    if (
+      !this.startEvent ||
+      ![CursorStatus.Normal, CursorStatus.Dragging].includes(this.dragStatus)
+    )
+      return false
     const distance = Math.sqrt(
       Math.pow(e.pageX - this.startEvent.pageX, 2) +
         Math.pow(e.pageY - this.startEvent.pageY, 2)
@@ -238,7 +246,7 @@ export class Mouse {
         } else if (!this.dataTransfer.includes(node)) {
           this.dataTransfer = [node]
         }
-        this.eventCallbacks.get(DragEventType.DragStart)?.forEach(cb => {
+        this.eventCallbacks.get(MouseEventType.DragStart)?.forEach(cb => {
           cb(e, node)
         })
       }
@@ -257,7 +265,7 @@ export class Mouse {
     const target = getClosestDtdNode(e) as HTMLElement
     const dragId = target?.getAttribute(DTD_BASE_KEY) as string
     const targetNode = getNode(dragId)
-    this.eventCallbacks.get(DragEventType.Dragging)?.forEach(cb => {
+    this.eventCallbacks.get(MouseEventType.Dragging)?.forEach(cb => {
       cb(e, targetNode)
     })
   }
@@ -274,7 +282,7 @@ export class Mouse {
       clientY: e.clientY
     })
     // 事件
-    this.eventCallbacks.get(DragEventType.DragEnd)?.forEach(cb => {
+    this.eventCallbacks.get(MouseEventType.DragEnd)?.forEach(cb => {
       const dragId = getClosestDtdNode(e)?.getAttribute(DTD_BASE_KEY) as string
       const targetNode = getNode(dragId)
       cb(e, targetNode)
@@ -290,16 +298,22 @@ export class Mouse {
   }
 
   public move = (e: MouseEvent) => {
+    // if (this.dragStatus === CursorStatus.Resizing) {
+    //   e.preventDefault()
+    // }
     if (this.isValidDragStart(e)) {
       this.onDragStart(e)
       this.onDragMove(e)
     }
-    this.eventCallbacks.get(DragEventType.Move)?.forEach(cb => {
+    this.eventCallbacks.get(MouseEventType.Move)?.forEach(cb => {
       cb(e)
     })
   }
 
   public down = (e: MouseEvent) => {
+    this.eventCallbacks.get(MouseEventType.Down)?.forEach(cb => {
+      cb(e)
+    })
     this.startEvent = e
     this.startTime = Date.now()
     if (this.isWillDrag(e)) {
@@ -323,10 +337,13 @@ export class Mouse {
           )
         }
       }
-      this.eventCallbacks.get(DragEventType.Click)?.forEach(cb => {
+      this.eventCallbacks.get(MouseEventType.Click)?.forEach(cb => {
         cb(e, targetNode)
       })
     }
+    this.eventCallbacks.get(MouseEventType.Up)?.forEach(cb => {
+      cb(e)
+    })
     this.startEvent = null
     this.onDragEnd(e)
     window.removeEventListener('mouseup', this.up)

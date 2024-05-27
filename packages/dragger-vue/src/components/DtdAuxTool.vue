@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { CSSProperties, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {
-  DragEventType,
+  MouseEventType,
   DragNodeType,
   DtdNode,
   NodeLayout,
@@ -135,13 +135,13 @@ function dragEndHandler() {
 }
 
 onMounted(() => {
-  mouse.on(DragEventType.Dragging, draggingHandler)
-  mouse.on(DragEventType.DragEnd, dragEndHandler)
+  mouse.on(MouseEventType.Dragging, draggingHandler)
+  mouse.on(MouseEventType.DragEnd, dragEndHandler)
 })
 
 onBeforeUnmount(() => {
-  mouse.on(DragEventType.Dragging, draggingHandler)
-  mouse.on(DragEventType.DragEnd, dragEndHandler)
+  mouse.on(MouseEventType.Dragging, draggingHandler)
+  mouse.on(MouseEventType.DragEnd, dragEndHandler)
 })
 </script>
 
