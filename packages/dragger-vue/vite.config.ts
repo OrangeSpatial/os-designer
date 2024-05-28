@@ -54,7 +54,11 @@ export default defineConfig({
     dts({
       outDir: ['dist/types'],
       entryRoot: 'src',
-      tsconfigPath: 'tsconfig.json'
+      tsconfigPath: 'tsconfig.json',
+      compilerOptions: {
+        declaration: true,
+        emitDeclarationOnly: true
+      }
     }),
     importCssPlugin()
   ]

@@ -87,8 +87,9 @@ const onMouseMove = (event: MouseEvent) => {
 };
 
 const onMouseUp = (event: MouseEvent) => {
-    if (mouse.dragStatus !== CursorStatus.Resizing) return;
-    mouse.setDragStatus(CursorStatus.Normal)
+    if (mouse.dragStatus === CursorStatus.Resizing) {
+        mouse.setDragStatus(CursorStatus.Normal);
+    }
     if (dragBar.value) {
         startDrag.value = false;
         dragBar.value.style.zIndex = '1';

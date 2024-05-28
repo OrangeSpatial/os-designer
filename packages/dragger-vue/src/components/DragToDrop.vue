@@ -70,13 +70,19 @@ function draggingHandler(e: MouseEvent) {
 }
 
 onMounted(() => {
-  rootRef.value && rootRef.value.addEventListener('scroll', podScrollHandler)
+  if (rootRef.value) {
+    rootRef.value.addEventListener('scroll', podScrollHandler)
+    // 禁用右键菜单
+    rootRef.value.oncontextmenu = () => false
+  }
   mouse.on(MouseEventType.DragEnd, dragEndHandle)
   // 拖拽中，如果拖拽至顶部或底部，左右边缘，自动滚动
   mouse.on(MouseEventType.Dragging, draggingHandler)
 })
 onBeforeUnmount(() => {
-  rootRef.value && rootRef.value.removeEventListener('scroll', podScrollHandler)
+  if(rootRef.value) {
+    rootRef.value.removeEventListener('scroll', podScrollHandler)
+  }
   mouse.off(MouseEventType.DragEnd, dragEndHandle)
   mouse.off(MouseEventType.Dragging, draggingHandler)
   DtdNode.clearCacheAll()

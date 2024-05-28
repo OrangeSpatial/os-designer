@@ -1,9 +1,6 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "noEmit": true,
-    "declaration": true,
-    "emitDeclarationOnly": true,
     "declarationDir": "dist/es",
     "jsxImportSource": "vue"
   },

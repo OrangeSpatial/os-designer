@@ -15,7 +15,7 @@ import { useCursor } from '../hooks/useCursor'
 
 const props = withDefaults(defineProps<{
   insertionBgColor?: string
-  scrollPosition?: { scrollTop: number, scrollLeft: number }
+  scrollPosition: { scrollTop: number, scrollLeft: number }
 }>(), {
   insertionBgColor: '#1890ff'
 })
@@ -30,6 +30,8 @@ const auxToolRef = ref<HTMLElement>()
 const auxToolStyle = ref<CSSProperties>({
   transform: 'translate(0, 0)'
 })
+
+const selectBoxRef = ref<{ selectHandler: (e?: MouseEvent, n?: DtdNode) => void }>()
 
 watch(() => props.scrollPosition, (val) => {
   auxToolStyle.value = {
@@ -134,14 +136,24 @@ function dragEndHandler() {
   currentTargetNode.value = undefined
 }
 
+const ro = new ResizeObserver(resizeHandler)
+function resizeHandler() {
+  if (!auxToolRef.value || !selectBoxRef.value) return
+  selectBoxRef.value.selectHandler()
+}
+
 onMounted(() => {
   mouse.on(MouseEventType.Dragging, draggingHandler)
   mouse.on(MouseEventType.DragEnd, dragEndHandler)
+  if(auxToolRef.value) ro.observe(auxToolRef.value)
 })
 
 onBeforeUnmount(() => {
   mouse.on(MouseEventType.Dragging, draggingHandler)
   mouse.on(MouseEventType.DragEnd, dragEndHandler)
+  if (ro) {
+    ro.disconnect()
+  }
 })
 </script>
 
@@ -151,7 +163,7 @@ onBeforeUnmount(() => {
          :style="{...insertionStyle, backgroundColor: insertionBgColor}"
     ></div>
     <div class="dtd-aux-dashed-box"></div>
-    <aux-selection :scrollPosition :parentEl="auxToolRef" />
+    <aux-selection ref="selectBoxRef" :scrollPosition v-if="auxToolRef" :parentEl="auxToolRef" />
     <div v-if="mouse.dataTransfer.length" class="dtd-aux-cover-rect dragging" :style="draggingCoverRectStyle"></div>
     <div v-if="currentTargetNode?.droppable" class="dtd-aux-cover-rect dropping" :style="droppingCoverRectStyle"></div>
   </div>

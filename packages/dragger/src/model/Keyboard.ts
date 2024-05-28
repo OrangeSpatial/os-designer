@@ -22,7 +22,7 @@ export class Keyboard {
     document.addEventListener('keyup', this.keyup)
   }
   public keyup = (e: KeyboardEvent) => {
-    this.pressKeys = this.pressKeys.filter(key => key !== e.key)
+    this.pressKeys = []
     document.removeEventListener('keyup', this.keyup)
   }
 }

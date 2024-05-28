@@ -31,7 +31,7 @@ const selectNodes = ref<{
 
 const { mouse } = useCursor()
 
-function selectHandler(e: MouseEvent, targetNode?: DtdNode) {
+function selectHandler(e?: MouseEvent, targetNode?: DtdNode) {
   selectNodes.value = []
   mouse.selectedNodes.forEach((selectNode: ISelectNode) => {
     selectNodes.value.push({
@@ -137,6 +137,10 @@ onMounted(() => {
 })
 onBeforeUnmount(() => {
   mouse.off(MouseEventType.Select, selectHandler)
+})
+
+defineExpose({
+  selectHandler
 })
 </script>
 
