@@ -135,7 +135,6 @@ export function insertNode(
   if (!targetNode || !sourceNodes) return
   const parent = targetNode.parent || targetNode
   if (type === DragNodeType.MOVE) {
-    console.log(`insertNode: ${targetNode.dragId}`)
     // 删除原节点
     deleteNode(sourceNodes)
   }

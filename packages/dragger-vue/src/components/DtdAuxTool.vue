@@ -11,6 +11,7 @@ import {
   initStyle
 } from '@oragspatl/dragger'
 import AuxSelection from './selection/Index.vue'
+import AuxHelpers from './helpers/Index.vue'
 import { useCursor } from '../hooks/useCursor'
 
 const props = withDefaults(defineProps<{
@@ -163,7 +164,9 @@ onBeforeUnmount(() => {
          :style="{...insertionStyle, backgroundColor: insertionBgColor}"
     ></div>
     <div class="dtd-aux-dashed-box"></div>
-    <aux-selection ref="selectBoxRef" :scrollPosition v-if="auxToolRef" :parentEl="auxToolRef" />
+    <aux-selection ref="selectBoxRef" :scrollPosition v-if="auxToolRef" :parentEl="auxToolRef">
+      <aux-helpers></aux-helpers>
+    </aux-selection>
     <div v-if="mouse.dataTransfer.length" class="dtd-aux-cover-rect dragging" :style="draggingCoverRectStyle"></div>
     <div v-if="currentTargetNode?.droppable" class="dtd-aux-cover-rect dropping" :style="droppingCoverRectStyle"></div>
   </div>

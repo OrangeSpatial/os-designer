@@ -114,8 +114,6 @@ function resetSelectionRectStyle() {
 }
 
 function updateSelectionRectStyle() {
-  console.log('updateSelectionRectStyle', props.scrollPosition);
-  
   selectNodes.value.map(item => {
     const dx = props.scrollPosition.scrollLeft - item.startPosition.x
     const dy = props.scrollPosition.scrollTop - item.startPosition.y
@@ -146,7 +144,9 @@ defineExpose({
 
 <template>
   <div v-for="(item) in selectNodes" :key="item.selectNode.dragId" class="dtd-aux-selection-box"
-       :style="item.selectionStyle"></div>
+       :style="item.selectionStyle">
+       <slot v-if="selectNodes.length === 1" :item="item.selectNode" />
+  </div>
 </template>
 
 <style scoped>

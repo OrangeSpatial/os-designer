@@ -222,6 +222,13 @@ export class Mouse {
     if (this.dragStatus === CursorStatus.Dragging) return
     const dragElement = getClosestDtdNode(e)
     if (!dragElement) return
+    this.dragElement = dragElement
+    // 设置数据
+    const dragId = dragElement?.getAttribute(DTD_BASE_KEY)
+    if (!dragId) return
+    // 正在拖拽的node
+    const node = getNode(dragId)
+    if (!node || !node.parent) return
     this.setDragStatus(CursorStatus.Dragging)
     this.setDragStartPosition({
       pageX: e.pageX,
@@ -231,26 +238,20 @@ export class Mouse {
     })
     // 设置样式
     setCursorStyle(window, CursorDragType.Grabbing)
-    this.dragElement = dragElement
-    // 设置数据
-    const dragId = dragElement?.getAttribute(DTD_BASE_KEY)
-    if (dragId) {
-      // 正在拖拽的node
-      const node = getNode(dragId)
-      if (node?.root.dragType === DragNodeType.COPY) {
-        setCursorStyle(window, CursorDragType.Copy)
+    if (node?.root.dragType === DragNodeType.COPY) {
+      setCursorStyle(window, CursorDragType.Copy)
+    }
+    if (node) {
+      // 如果node在选中的节点里面，携带选中的所有节点
+      if (this.selectedNodes.find(item => item.node.dragId === node.dragId)) {
+        this.dataTransfer = this.selectedNodes.map(item => item.node)
+      } else if (!this.dataTransfer.includes(node)) {
+        this.dataTransfer = [node]
+        this.setSelectedNodes([{ node, e }], e)
       }
-      if (node) {
-        // 如果node在选中的节点里面，携带选中的所有节点
-        if (this.selectedNodes.find(item => item.node.dragId === node.dragId)) {
-          this.dataTransfer = this.selectedNodes.map(item => item.node)
-        } else if (!this.dataTransfer.includes(node)) {
-          this.dataTransfer = [node]
-        }
-        this.eventCallbacks.get(MouseEventType.DragStart)?.forEach(cb => {
-          cb(e, node)
-        })
-      }
+      this.eventCallbacks.get(MouseEventType.DragStart)?.forEach(cb => {
+        cb(e, node)
+      })
     }
   }
 
@@ -299,9 +300,6 @@ export class Mouse {
   }
 
   public move = (e: MouseEvent) => {
-    // if (this.dragStatus === CursorStatus.Resizing) {
-    //   e.preventDefault()
-    // }
     if (this.isValidDragStart(e)) {
       this.onDragStart(e)
       this.onDragMove(e)
@@ -327,7 +325,11 @@ export class Mouse {
     if (this.isValidClick(e)) {
       const dragId = getClosestDtdNode(e)?.getAttribute(DTD_BASE_KEY) as string
       const targetNode = getNode(dragId)
-      if (targetNode && targetNode.root.dragType !== DragNodeType.COPY) {
+      if (
+        targetNode &&
+        targetNode.parent &&
+        targetNode.root.dragType !== DragNodeType.COPY
+      ) {
         if (e.ctrlKey || e.metaKey) {
           // 存在的不能重复添加, 已添加的取消选中
           const index = this.selectedNodes.findIndex(
