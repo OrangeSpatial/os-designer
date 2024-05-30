@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {
-  DtdNode, NodeLayout, insertNode, insertNodeInContainer, MouseEventType, DragNodeType, cursorAtContainerEdge,
+  DtdNode, NodeLayout, MouseEventType, DragNodeType, cursorAtContainerEdge,
   getCursorPositionInDtdNode,
   getLayoutNodeInContainer
 } from '@oragspatl/dragger'
-import { initCursor } from '../hooks/useCursor'
+import { useCursor } from '../hooks/useCursor'
 import DtdGhost from './DtdGhost.vue'
 import { onBeforeUnmount, ref, onMounted } from 'vue'
 import { useKeyboard } from '../hooks/useKeyboard'
@@ -19,7 +19,7 @@ const emits = defineEmits<{
 
 const podRef = ref<HTMLElement>()
 const { keyboard } = useKeyboard()
-const mouse = initCursor(keyboard)
+const { mouse } = useCursor(keyboard)
 
 function dragEndHandler(e: MouseEvent, targetNode?: DtdNode) {
   const sourceNode = mouse.dataTransfer
@@ -34,11 +34,7 @@ function dragEndHandler(e: MouseEvent, targetNode?: DtdNode) {
   const isContainerEdge = cursorAtContainerEdge(positionObj.rect, e)
   const isVertical = getLayoutNodeInContainer(positionObj.targetEl) === NodeLayout.VERTICAL
   const insertBefore = isVertical ? positionObj.insertBefore || positionObj.isTop : positionObj.isLeft
-  if (targetNode?.droppable && !isContainerEdge) {
-    insertNodeInContainer(targetNode, sourceNode, insertBefore, dragType)
-  } else {
-    insertNode(targetNode, sourceNode, insertBefore, dragType)
-  }
+  mouse.insertNode(targetNode, sourceNode, insertBefore, dragType, targetNode?.droppable && !isContainerEdge)
 }
 
 const carryNode = ref<DtdNode[]>([])

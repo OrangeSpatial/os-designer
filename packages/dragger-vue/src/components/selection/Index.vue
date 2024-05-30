@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { CSSProperties, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { CSSProperties, inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {
   DTD_BASE_KEY, initStyle,
   MouseEventType,
   DtdNode,
   cursorAtContainerEdge,
   getCursorPositionInDtdNode,
-  getElementByDtdId, ISelectNode
+  getElementByDtdId, ISelectNode,
+  Mouse
 } from '@oragspatl/dragger'
-import { useCursor } from '../../hooks/useCursor'
+import { DTD_MOUSE } from '../../common/injectSymbol';
 
 defineOptions({
   name: 'AuxSelection'
@@ -29,11 +30,11 @@ const selectNodes = ref<{
   startTop: number;
 }[]>([])
 
-const { mouse } = useCursor()
+const mouse = inject<Mouse>(DTD_MOUSE)
 
 function selectHandler(e?: MouseEvent, targetNode?: DtdNode) {
   selectNodes.value = []
-  mouse.selectedNodes.forEach((selectNode: ISelectNode) => {
+  mouse?.selectedNodes.forEach((selectNode: ISelectNode) => {
     selectNodes.value.push({
       selectNode: selectNode.node,
       selectionStyle: initStyle,
@@ -53,7 +54,7 @@ function updateSelection(e?: MouseEvent, targetNode?: DtdNode) {
     return
   }
   const positionObj = getCursorPositionInDtdNode(e)
-  if (!mouse.selectedNodes.length) {
+  if (!mouse?.selectedNodes.length) {
     resetSelectionRectStyle()
     return
   }
@@ -131,10 +132,10 @@ watch(() => props.scrollPosition, () => {
 }, { deep: true })
 
 onMounted(() => {
-  mouse.on(MouseEventType.Select, selectHandler)
+  mouse?.on(MouseEventType.Select, selectHandler)
 })
 onBeforeUnmount(() => {
-  mouse.off(MouseEventType.Select, selectHandler)
+  mouse?.off(MouseEventType.Select, selectHandler)
 })
 
 defineExpose({

@@ -1,4 +1,4 @@
-import { DtdNode, getNode } from './DtdNode'
+import { DtdNode, deleteNode, getNode } from './DtdNode'
 import {
   getClosestDtdNode,
   removeGhostElStyle,
@@ -354,5 +354,52 @@ export class Mouse {
       cb(e)
     })
     window.removeEventListener('mouseup', this.up)
+  }
+
+  /**
+   * 插入到指定位置
+   * @param targetNode 被插入节点
+   * @param sourceNodes 待插入节点
+   * @param insertBefore
+   * @param type
+   * @param isContainer 目标节点是否是容器
+   */
+  insertNode(
+    targetNode: DtdNode,
+    sourceNodes: DtdNode[],
+    insertBefore: boolean,
+    type: DragNodeType,
+    isContainer: boolean
+  ) {
+    if (!targetNode || !sourceNodes) return
+    if (type === DragNodeType.MOVE) {
+      // 删除原节点
+      deleteNode(sourceNodes)
+    }
+    const parent = isContainer ? targetNode : targetNode.parent || targetNode
+    const insertNodes = sourceNodes.map(node => {
+      node.parent = parent
+      // 如果是copy
+      if (type === DragNodeType.COPY) {
+        node = new DtdNode({ ...node, dragId: '' }, parent)
+      }
+      return node
+    })
+    // update dataTransfer
+    if (type === DragNodeType.COPY) {
+      this.dataTransfer = insertNodes
+    }
+    if (isContainer) {
+      insertBefore
+        ? targetNode.children.unshift(...insertNodes)
+        : targetNode.children.push(...insertNodes)
+    } else {
+      parent.children.splice(
+        parent.children.findIndex(node => targetNode.dragId === node.dragId) +
+          (insertBefore ? 0 : 1),
+        0,
+        ...insertNodes
+      )
+    }
   }
 }

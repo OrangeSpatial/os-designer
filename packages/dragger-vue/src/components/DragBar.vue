@@ -9,9 +9,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, reactive, onMounted, onUnmounted } from 'vue';
-import { useCursor } from '../hooks';
-import { MouseEventType, CursorStatus } from '@oragspatl/dragger'
+import { ref, computed, reactive, onMounted, onUnmounted, inject } from 'vue';
+import { MouseEventType, CursorStatus, Mouse } from '@oragspatl/dragger'
+import { DTD_MOUSE } from '../common/injectSymbol';
 
 interface DragBarProps {
     direction: 'horizontal' | 'vertical';
@@ -23,7 +23,8 @@ const props = withDefaults(defineProps<DragBarProps>(), {
 });
 
 const dragBar = ref<HTMLElement | null>(null);
-const { mouse } = useCursor();
+
+const mouse = inject<Mouse>(DTD_MOUSE)
 const startDrag = ref(false);
 
 const dragBarStyle = computed(() => {
@@ -42,8 +43,8 @@ const dragBarStyle = computed(() => {
 
 const startPostion = reactive({ x: 0, y: 0, width: 0, height: 0 });
 const onMouseDown = (event: MouseEvent) => {
-    if (dragBar.value && mouse.dragStatus === CursorStatus.Normal) {
-        mouse.setDragStatus(CursorStatus.Resizing)
+    if (dragBar.value && mouse?.dragStatus === CursorStatus.Normal) {
+        mouse?.setDragStatus(CursorStatus.Resizing)
         startDrag.value = true;
         dragBar.value.style.zIndex = '2';
         startPostion.x = event.clientX;
@@ -87,8 +88,8 @@ const onMouseMove = (event: MouseEvent) => {
 };
 
 const onMouseUp = (event: MouseEvent) => {
-    if (mouse.dragStatus === CursorStatus.Resizing) {
-        mouse.setDragStatus(CursorStatus.Normal);
+    if (mouse?.dragStatus === CursorStatus.Resizing) {
+        mouse?.setDragStatus(CursorStatus.Normal);
     }
     if (dragBar.value) {
         startDrag.value = false;
@@ -97,13 +98,13 @@ const onMouseUp = (event: MouseEvent) => {
 };
 
 onMounted(() => {
-    mouse.on(MouseEventType.Up, onMouseUp);
-    mouse.on(MouseEventType.Move, onMouseMove);
+    mouse?.on(MouseEventType.Up, onMouseUp);
+    mouse?.on(MouseEventType.Move, onMouseMove);
 });
 
 onUnmounted(() => {
-    mouse.off(MouseEventType.Up, onMouseUp);
-    mouse.off(MouseEventType.Move, onMouseMove);
+    mouse?.off(MouseEventType.Up, onMouseUp);
+    mouse?.off(MouseEventType.Move, onMouseMove);
 });
 </script>
 
@@ -121,12 +122,12 @@ onUnmounted(() => {
 .horizontal {
     left: 0;
     right: 0;
-    height: 2px;
+    height: 4px;
     cursor: ns-resize;
 }
 
 .vertical {
-    width: 2px;
+    width: 4px;
     top: 0;
     bottom: 0;
     cursor: ew-resize;

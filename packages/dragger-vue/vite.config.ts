@@ -56,6 +56,7 @@ export default defineConfig({
       entryRoot: 'src',
       tsconfigPath: 'tsconfig.json',
       compilerOptions: {
+        // declarationDir: "dist/es",
         declaration: true,
         emitDeclarationOnly: true
       }

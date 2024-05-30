@@ -1,7 +1,6 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "declarationDir": "dist/es",
     "jsxImportSource": "vue"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]

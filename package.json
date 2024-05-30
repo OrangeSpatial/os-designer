@@ -6,7 +6,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter @oragspatl-designer/dv-playground dev",
+    "dev": "pnpm --filter @oragspatl/designer dev",
     "postinstall": "simple-git-hooks",
     "commit": "cz",
     "build": "node scripts/build.js",

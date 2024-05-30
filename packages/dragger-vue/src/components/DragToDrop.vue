@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { inject, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import DtdRecursion from './DtdRecursion.vue'
 import DtdItem from './DtdItem.vue'
 import DtdAuxTool from './DtdAuxTool.vue'
-import { DtdNode, getNode, MouseEventType, DragNodeType, ISelectNode } from '@oragspatl/dragger'
-import { useCursor } from '../hooks/useCursor'
+import { DtdNode, getNode, MouseEventType, DragNodeType, ISelectNode, Mouse } from '@oragspatl/dragger'
 import { cursorAtContainerEdgeType } from '@oragspatl/dragger'
+import { DTD_MOUSE } from '../common/injectSymbol'
 
 defineOptions({
   name: 'DragToDrop'
@@ -25,16 +25,16 @@ const emits = defineEmits(['change'])
 
 const dtdData = ref(new DtdNode({ children: [] }))
 
-const { mouse } = useCursor()
+const mouse = inject<Mouse>(DTD_MOUSE)
 
 const dragEndHandle = (e: MouseEvent, targetNode?: DtdNode) => {
-  if (!mouse.dataTransfer.length) return
-  if (targetNode && mouse.dataTransfer.find((node: DtdNode) => node.isParentOf(targetNode))) return
+  if (!mouse?.dataTransfer.length) return
+  if (targetNode && mouse?.dataTransfer.find((node: DtdNode) => node.isParentOf(targetNode))) return
   nextTick(() => {
     emits('change', getData())
     dtdData.value = dtdData.value.clone()
-    mouse.setSelectedNodes(
-      mouse.dataTransfer.map((node: DtdNode) => ({ node: getNode(node.dragId), e } as ISelectNode)),
+    mouse?.setSelectedNodes(
+      mouse?.dataTransfer.map((node: DtdNode) => ({ node: getNode(node.dragId), e } as ISelectNode)),
       e,
       targetNode
     )
@@ -75,16 +75,16 @@ onMounted(() => {
     // 禁用右键菜单
     rootRef.value.oncontextmenu = () => false
   }
-  mouse.on(MouseEventType.DragEnd, dragEndHandle)
+  mouse?.on(MouseEventType.DragEnd, dragEndHandle)
   // 拖拽中，如果拖拽至顶部或底部，左右边缘，自动滚动
-  mouse.on(MouseEventType.Dragging, draggingHandler)
+  mouse?.on(MouseEventType.Dragging, draggingHandler)
 })
 onBeforeUnmount(() => {
   if(rootRef.value) {
     rootRef.value.removeEventListener('scroll', podScrollHandler)
   }
-  mouse.off(MouseEventType.DragEnd, dragEndHandle)
-  mouse.off(MouseEventType.Dragging, draggingHandler)
+  mouse?.off(MouseEventType.DragEnd, dragEndHandle)
+  mouse?.off(MouseEventType.Dragging, draggingHandler)
   DtdNode.clearCacheAll()
 })
 
