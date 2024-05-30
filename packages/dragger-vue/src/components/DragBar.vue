@@ -12,6 +12,7 @@
 import { ref, computed, reactive, onMounted, onUnmounted, inject } from 'vue';
 import { MouseEventType, CursorStatus, Mouse } from '@oragspatl/dragger'
 import { DTD_MOUSE } from '../common/injectSymbol';
+import { useTheme } from '../hooks/useTheme';
 
 interface DragBarProps {
     direction: 'horizontal' | 'vertical';
@@ -21,7 +22,7 @@ interface DragBarProps {
 const props = withDefaults(defineProps<DragBarProps>(), {
     range: [0, Infinity] as any
 });
-
+const { theme }: any = useTheme()
 const dragBar = ref<HTMLElement | null>(null);
 
 const mouse = inject<Mouse>(DTD_MOUSE)
@@ -116,7 +117,7 @@ onUnmounted(() => {
 
 .drag-bar:hover {
     z-index: 2;
-    background-color: var(--os-primary-bg-color);;
+    background-color: v-bind('theme.primaryColor');
 }
 
 .horizontal {

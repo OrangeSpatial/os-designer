@@ -33,7 +33,7 @@ import { genCls } from "@oragspatl/dragger-vue";
     &-designer-worksapce-content {
         flex: 1;
         overflow: auto;
-        padding: 4px;
+        padding: 10px;
     }
     &-designer-worksapce-footer {
         height: 28px;

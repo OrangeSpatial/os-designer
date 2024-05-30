@@ -10,6 +10,7 @@ import {
   Mouse
 } from '@oragspatl/dragger'
 import { DTD_MOUSE } from '../../common/injectSymbol';
+import { useTheme } from '../../hooks/useTheme';
 
 defineOptions({
   name: 'AuxSelection'
@@ -22,6 +23,7 @@ const props = withDefaults(defineProps<{
   scrollPosition: () => ({ scrollTop: 0, scrollLeft: 0 })
 })
 
+const { theme }: any = useTheme()
 const selectNodes = ref<{
   selectionStyle: CSSProperties;
   selectNode: DtdNode;
@@ -161,6 +163,6 @@ defineExpose({
   left: 0;
   width: 0;
   height: 0;
-  border: 0px solid #0092fbe1;
+  border: 0px solid v-bind('theme.primaryColor');
 }
 </style>

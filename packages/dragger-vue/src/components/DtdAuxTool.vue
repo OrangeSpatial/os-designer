@@ -14,6 +14,7 @@ import {
 import AuxSelection from './selection/Index.vue'
 import AuxHelpers from './helpers/Index.vue'
 import { DTD_MOUSE } from '../common/injectSymbol';
+import { useTheme } from '../hooks/useTheme';
 
 const props = withDefaults(defineProps<{
   insertionBgColor?: string
@@ -22,6 +23,7 @@ const props = withDefaults(defineProps<{
   insertionBgColor: '#1890ff'
 })
 
+const { theme }: any = useTheme()
 const insertionStyle = ref<CSSProperties>()
 
 const draggingCoverRectStyle = ref<CSSProperties>(initStyle)
@@ -198,12 +200,12 @@ onBeforeUnmount(() => {
 .dtd-aux-cover-rect {
   pointer-events: none;
   position: absolute;
-  background-color: rgba(0, 147, 251, 0.1);
+  background-color: v-bind('theme.primaryColor_1');
   transform: perspective(1px) translateZ(0);
 }
 
 .dtd-aux-cover-rect.dragging {
   box-sizing: border-box;
-  border: 1px solid #0092fbe1;
+  border: 1px solid v-bind('theme.primaryColor');
 }
 </style>
