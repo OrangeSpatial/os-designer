@@ -247,7 +247,7 @@ export class Mouse {
         this.dataTransfer = this.selectedNodes.map(item => item.node)
       } else if (!this.dataTransfer.includes(node)) {
         this.dataTransfer = [node]
-        this.setSelectedNodes([{ node, e }], e)
+        this.setSelectedNodes([], e)
       }
       this.eventCallbacks.get(MouseEventType.DragStart)?.forEach(cb => {
         cb(e, node)

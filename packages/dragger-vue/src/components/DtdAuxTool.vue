@@ -165,7 +165,9 @@ onBeforeUnmount(() => {
     ></div>
     <div class="dtd-aux-dashed-box"></div>
     <aux-selection ref="selectBoxRef" :scrollPosition v-if="auxToolRef" :parentEl="auxToolRef">
-      <aux-helpers></aux-helpers>
+      <template #default="{ item }">
+        <aux-helpers :node="item"></aux-helpers>
+      </template>
     </aux-selection>
     <div v-if="mouse.dataTransfer.length" class="dtd-aux-cover-rect dragging" :style="draggingCoverRectStyle"></div>
     <div v-if="currentTargetNode?.droppable" class="dtd-aux-cover-rect dropping" :style="droppingCoverRectStyle"></div>

@@ -13,7 +13,13 @@
     </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { DtdNode } from '@oragspatl/dragger';
+
+defineProps<{
+    node: DtdNode;
+}>();
+</script>
 
 <style scoped>
     .dtd-aux-helpers {
