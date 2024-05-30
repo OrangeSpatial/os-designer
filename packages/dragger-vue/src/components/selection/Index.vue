@@ -148,7 +148,10 @@ defineExpose({
 <template>
   <div v-for="(item) in selectNodes" :key="item.selectNode.dragId" class="dtd-aux-selection-box"
        :style="item.selectionStyle">
-       <slot v-if="selectNodes.length === 1" :item="item.selectNode" />
+       <slot v-if="selectNodes.length === 1" :item="{
+          selectionStyleTransform: item.selectionStyle.transform as string,
+          selectNode: item.selectNode
+        }" />
   </div>
 </template>
 

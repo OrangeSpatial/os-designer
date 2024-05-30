@@ -1,25 +1,33 @@
 <template>
-    <div class="dtd-aux-helpers top-left">
-        {{ node?.dragId }}
+    <div class="dtd-aux-helpers" :class="[
+        isTouchedTop ? 'bottom-left' : 'top-left'
+    ]">
+        {{ node.selectNode?.dragId }}
     </div>
-    <div class="dtd-aux-helpers top-right">
-        {{ node?.props?.name }}
+    <div class="dtd-aux-helpers" :class="[
+        isTouchedTop ? 'bottom-right' : 'top-right'
+    ]">
+        {{ node.selectNode?.props?.name }}
     </div>
-    <!-- <div class="dtd-aux-helpers bottom-right">
-        bottom-right
-    </div>
-    <div class="dtd-aux-helpers bottom-left">
-        bottom-left
-    </div> -->
 </template>
 
 <script lang="ts" setup>
 import { DtdNode } from '@oragspatl/dragger';
 import { useTheme } from '../../hooks/useTheme';
+import { computed } from 'vue';
 
-defineProps<{
-    node: DtdNode;
+const props = defineProps<{
+    node: {
+        selectionStyleTransform: string;
+        selectNode: DtdNode;
+    };
 }>();
+
+const isTouchedTop = computed(() => {
+    const match = props.node.selectionStyleTransform?.match(/translate3d\([^,]+,([^,]+),[^,]+\)/);
+    const translateY = match ? match[1] : '11';
+    return parseFloat(translateY) < 10;
+});
 
 const { theme }: any = useTheme();
 </script>
