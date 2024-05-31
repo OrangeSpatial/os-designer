@@ -9,7 +9,6 @@ const customProps = computed(() => {
     [DTD_BASE_KEY]: props.disabled ? undefined : props.data.dragId
   }
 })
-
 </script>
 
 <template>

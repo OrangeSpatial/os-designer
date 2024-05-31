@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { DtdNode } from "@oragspatl/dragger";
-import DtdItem from "./DtdItem.vue";
+import { DtdNode } from '@oragspatl/dragger'
+import DtdItem from './DtdItem.vue'
 
 defineOptions({
-  name: "DtdRecursion",
-});
+  name: 'DtdRecursion'
+})
 defineSlots<{
   default: { item: DtdNode }
 }>()
 withDefaults(
   defineProps<{
-    node: DtdNode;
-    nodeClass?: string;
+    node: DtdNode
+    nodeClass?: string
   }>(),
   {}
-);
+)
 </script>
 
 <template>

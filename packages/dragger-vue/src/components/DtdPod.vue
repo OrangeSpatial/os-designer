@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import {
-  DtdNode, NodeLayout, MouseEventType, DragNodeType, cursorAtContainerEdge,
+  DtdNode,
+  NodeLayout,
+  MouseEventType,
+  DragNodeType,
+  cursorAtContainerEdge,
   getCursorPositionInDtdNode,
   getLayoutNodeInContainer
 } from '@oragspatl/dragger'
@@ -25,16 +29,26 @@ function dragEndHandler(e: MouseEvent, targetNode?: DtdNode) {
   const sourceNode = mouse.dataTransfer
   const positionObj = getCursorPositionInDtdNode(e)
   carryNode.value = []
-  if (!targetNode || !sourceNode.length || !positionObj || !mouse.dragElement) return
+  if (!targetNode || !sourceNode.length || !positionObj || !mouse.dragElement)
+    return
   const parentNode = sourceNode.find(node => node.isParentOf(targetNode))
   if (parentNode) return
   // COPY组 拖拽不允许插入到容器内
   if (targetNode.root.dragType === DragNodeType.COPY) return
   const dragType = sourceNode[0].root.dragType
   const isContainerEdge = cursorAtContainerEdge(positionObj.rect, e)
-  const isVertical = getLayoutNodeInContainer(positionObj.targetEl) === NodeLayout.VERTICAL
-  const insertBefore = isVertical ? positionObj.insertBefore || positionObj.isTop : positionObj.isLeft
-  mouse.insertNode(targetNode, sourceNode, insertBefore, dragType, targetNode?.droppable && !isContainerEdge)
+  const isVertical =
+    getLayoutNodeInContainer(positionObj.targetEl) === NodeLayout.VERTICAL
+  const insertBefore = isVertical
+    ? positionObj.insertBefore || positionObj.isTop
+    : positionObj.isLeft
+  mouse.insertNode(
+    targetNode,
+    sourceNode,
+    insertBefore,
+    dragType,
+    targetNode?.droppable && !isContainerEdge
+  )
 }
 
 const carryNode = ref<DtdNode[]>([])
@@ -71,7 +85,11 @@ onBeforeUnmount(() => {
   <div ref="podRef" class="dtd-pod">
     <slot></slot>
     <dtd-ghost @mounted="ghostMounted">
-      <slot name="ghost" v-if="carryNode.length" :items="carryNode.map(node => node.props)" />
+      <slot
+        name="ghost"
+        v-if="carryNode.length"
+        :items="carryNode.map(node => node.props)"
+      />
     </dtd-ghost>
   </div>
 </template>
@@ -83,4 +101,3 @@ onBeforeUnmount(() => {
   width: 100%;
 }
 </style>
-

@@ -1,36 +1,51 @@
 <script setup lang="ts">
-import { CSSProperties, inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {
-  DTD_BASE_KEY, initStyle,
+  CSSProperties,
+  inject,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch
+} from 'vue'
+import {
+  DTD_BASE_KEY,
+  initStyle,
   MouseEventType,
   DtdNode,
   cursorAtContainerEdge,
   getCursorPositionInDtdNode,
-  getElementByDtdId, ISelectNode,
+  getElementByDtdId,
+  ISelectNode,
   Mouse
 } from '@oragspatl/dragger'
-import { DTD_MOUSE } from '../../common/injectSymbol';
-import { useTheme } from '../../hooks/useTheme';
+import { DTD_MOUSE } from '../../common/injectSymbol'
+import { useTheme } from '../../hooks/useTheme'
 
 defineOptions({
   name: 'AuxSelection'
 })
 
-const props = withDefaults(defineProps<{
-  parentEl?: HTMLElement;
-  scrollPosition: { scrollTop: number, scrollLeft: number };
-}>(), {
-  scrollPosition: () => ({ scrollTop: 0, scrollLeft: 0 })
-})
+const props = withDefaults(
+  defineProps<{
+    parentEl?: HTMLElement
+    scrollPosition: { scrollTop: number; scrollLeft: number }
+  }>(),
+  {
+    scrollPosition: () => ({ scrollTop: 0, scrollLeft: 0 })
+  }
+)
 
 const { theme }: any = useTheme()
-const selectNodes = ref<{
-  selectionStyle: CSSProperties;
-  selectNode: DtdNode;
-  startPosition: { x: number; y: number };
-  startLeft: number;
-  startTop: number;
-}[]>([])
+const selectNodes = ref<
+  {
+    selectionStyle: CSSProperties
+    selectNode: DtdNode
+    startPosition: { x: number; y: number }
+    startLeft: number
+    startTop: number
+  }[]
+>([])
 
 const mouse = inject<Mouse>(DTD_MOUSE)
 
@@ -40,7 +55,10 @@ function selectHandler(e?: MouseEvent, targetNode?: DtdNode) {
     selectNodes.value.push({
       selectNode: selectNode.node,
       selectionStyle: initStyle,
-      startPosition: { x: props.scrollPosition.scrollLeft, y: props.scrollPosition.scrollTop },
+      startPosition: {
+        x: props.scrollPosition.scrollLeft,
+        y: props.scrollPosition.scrollTop
+      },
       startLeft: 0,
       startTop: 0
     })
@@ -81,7 +99,9 @@ function updateSelection(e?: MouseEvent, targetNode?: DtdNode) {
       })
     } else {
       // 如果不是放入容器，计算所有拖拽节点父级dom的最大矩形
-      const parentDtdDom = positionObj.targetEl.parentElement?.closest(`[${DTD_BASE_KEY}]`) as HTMLElement
+      const parentDtdDom = positionObj.targetEl.parentElement?.closest(
+        `[${DTD_BASE_KEY}]`
+      ) as HTMLElement
       if (!parentDtdDom) return
       selectedDoms = selectNodes.value.map(item => {
         return getElementByDtdId(item.selectNode.dragId, parentDtdDom)
@@ -129,9 +149,13 @@ function updateSelectionRectStyle() {
   })
 }
 
-watch(() => props.scrollPosition, () => {
-  updateSelectionRectStyle()
-}, { deep: true })
+watch(
+  () => props.scrollPosition,
+  () => {
+    updateSelectionRectStyle()
+  },
+  { deep: true }
+)
 
 onMounted(() => {
   mouse?.on(MouseEventType.Select, selectHandler)
@@ -146,12 +170,19 @@ defineExpose({
 </script>
 
 <template>
-  <div v-for="(item) in selectNodes" :key="item.selectNode.dragId" class="dtd-aux-selection-box"
-       :style="item.selectionStyle">
-       <slot v-if="selectNodes.length === 1" :item="{
-          selectionStyleTransform: item.selectionStyle.transform as string,
-          selectNode: item.selectNode
-        }" />
+  <div
+    v-for="item in selectNodes"
+    :key="item.selectNode.dragId"
+    class="dtd-aux-selection-box"
+    :style="item.selectionStyle"
+  >
+    <slot
+      v-if="selectNodes.length === 1"
+      :item="{
+        selectionStyleTransform: item.selectionStyle.transform as string,
+        selectNode: item.selectNode
+      }"
+    />
   </div>
 </template>
 

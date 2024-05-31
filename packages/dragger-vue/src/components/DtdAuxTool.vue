@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import { CSSProperties, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import {
+  CSSProperties,
+  inject,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch
+} from 'vue'
 import {
   MouseEventType,
   DragNodeType,
@@ -13,15 +20,18 @@ import {
 } from '@oragspatl/dragger'
 import AuxSelection from './selection/Index.vue'
 import AuxHelpers from './helpers/Index.vue'
-import { DTD_MOUSE } from '../common/injectSymbol';
-import { useTheme } from '../hooks/useTheme';
+import { DTD_MOUSE } from '../common/injectSymbol'
+import { useTheme } from '../hooks/useTheme'
 
-const props = withDefaults(defineProps<{
-  insertionBgColor?: string
-  scrollPosition: { scrollTop: number, scrollLeft: number }
-}>(), {
-  insertionBgColor: '#1890ff'
-})
+const props = withDefaults(
+  defineProps<{
+    insertionBgColor?: string
+    scrollPosition: { scrollTop: number; scrollLeft: number }
+  }>(),
+  {
+    insertionBgColor: '#1890ff'
+  }
+)
 
 const { theme }: any = useTheme()
 const insertionStyle = ref<CSSProperties>()
@@ -35,21 +45,30 @@ const auxToolStyle = ref<CSSProperties>({
   transform: 'translate(0, 0)'
 })
 
-const selectBoxRef = ref<{ selectHandler: (e?: MouseEvent, n?: DtdNode) => void }>()
+const selectBoxRef = ref<{
+  selectHandler: (e?: MouseEvent, n?: DtdNode) => void
+}>()
 
-watch(() => props.scrollPosition, (val) => {
-  auxToolStyle.value = {
-    transform: `translate(${val?.scrollLeft || 0}px, ${val?.scrollTop || 0}px)`
+watch(
+  () => props.scrollPosition,
+  val => {
+    auxToolStyle.value = {
+      transform: `translate(${val?.scrollLeft || 0}px, ${val?.scrollTop || 0}px)`
+    }
   }
-})
+)
 
 const mouse = inject<Mouse>(DTD_MOUSE)
 const currentTargetNode = ref<DtdNode>()
 
 function draggingHandler(e: MouseEvent, targetNode?: DtdNode) {
-
   const positionObj = getCursorPositionInDtdNode(e)
-  if (!positionObj || !targetNode || !auxToolRef.value || targetNode.root.dragType === DragNodeType.COPY) {
+  if (
+    !positionObj ||
+    !targetNode ||
+    !auxToolRef.value ||
+    targetNode.root.dragType === DragNodeType.COPY
+  ) {
     resetInsertionStyle()
     resetDraggingCoverRectStyle()
     resetDroppingCoverRectStyle()
@@ -60,17 +79,20 @@ function draggingHandler(e: MouseEvent, targetNode?: DtdNode) {
   const { x: pX, y: pY } = container.getBoundingClientRect()
   const sourceNode = mouse?.dataTransfer
   if (!sourceNode?.length) return
-  const parentNode = sourceNode.find((node: DtdNode) => node.isParentOf(targetNode))
+  const parentNode = sourceNode.find((node: DtdNode) =>
+    node.isParentOf(targetNode)
+  )
   currentTargetNode.value = targetNode
   const { isTop, isLeft, rect } = positionObj
-  const isVertical = getLayoutNodeInContainer(positionObj.targetEl) === NodeLayout.VERTICAL
+  const isVertical =
+    getLayoutNodeInContainer(positionObj.targetEl) === NodeLayout.VERTICAL
   const d_x = props.scrollPosition?.scrollLeft || 0
   const d_y = props.scrollPosition?.scrollTop || 0
   const left = rect.left - pX - d_x
   const top = rect.top - pY - d_y
 
   const x = isVertical ? left : isLeft ? left : left + rect.width
-  const y = isVertical ? isTop ? top : top + rect.height : top
+  const y = isVertical ? (isTop ? top : top + rect.height) : top
   if (targetNode.droppable && !cursorAtContainerEdge(rect, e)) {
     // 在可放置的容器内
     resetInsertionStyle()
@@ -88,7 +110,12 @@ function draggingHandler(e: MouseEvent, targetNode?: DtdNode) {
   }
 }
 
-function updateInsertionStyle(rect: DOMRect, x: number, y: number, vertical: boolean) {
+function updateInsertionStyle(
+  rect: DOMRect,
+  x: number,
+  y: number,
+  vertical: boolean
+) {
   insertionStyle.value = {
     transform: `perspective(1px) translate3d(${x - 1}px,${y - 1}px,0px)`,
     width: vertical ? rect.width + 'px' : '2px',
@@ -96,7 +123,12 @@ function updateInsertionStyle(rect: DOMRect, x: number, y: number, vertical: boo
   }
 }
 
-function updateDraggingCoverRectStyle(dx: number, dy: number, pX: number, pY: number) {
+function updateDraggingCoverRectStyle(
+  dx: number,
+  dy: number,
+  pX: number,
+  pY: number
+) {
   const dragRect = mouse?.dragElement?.getBoundingClientRect()
   if (dragRect) {
     draggingCoverRectStyle.value = {
@@ -133,7 +165,6 @@ function resetDroppingCoverRectStyle() {
   droppingCoverRectStyle.value = initStyle
 }
 
-
 function dragEndHandler() {
   resetInsertionStyle()
   resetDraggingCoverRectStyle()
@@ -149,7 +180,7 @@ function resizeHandler() {
 onMounted(() => {
   mouse?.on(MouseEventType.Dragging, draggingHandler)
   mouse?.on(MouseEventType.DragEnd, dragEndHandler)
-  if(auxToolRef.value) ro.observe(auxToolRef.value)
+  if (auxToolRef.value) ro.observe(auxToolRef.value)
 })
 
 onBeforeUnmount(() => {
@@ -163,17 +194,31 @@ onBeforeUnmount(() => {
 
 <template>
   <div :style="auxToolStyle" class="dtd-aux-tool" ref="auxToolRef">
-    <div class="dtd-aux-insertion"
-         :style="{...insertionStyle, backgroundColor: insertionBgColor}"
+    <div
+      class="dtd-aux-insertion"
+      :style="{ ...insertionStyle, backgroundColor: insertionBgColor }"
     ></div>
     <div class="dtd-aux-dashed-box"></div>
-    <aux-selection ref="selectBoxRef" :scrollPosition v-if="auxToolRef" :parentEl="auxToolRef">
+    <aux-selection
+      ref="selectBoxRef"
+      :scrollPosition
+      v-if="auxToolRef"
+      :parentEl="auxToolRef"
+    >
       <template #default="{ item }">
         <aux-helpers :node="item"></aux-helpers>
       </template>
     </aux-selection>
-    <div v-if="mouse?.dataTransfer.length" class="dtd-aux-cover-rect dragging" :style="draggingCoverRectStyle"></div>
-    <div v-if="currentTargetNode?.droppable" class="dtd-aux-cover-rect dropping" :style="droppingCoverRectStyle"></div>
+    <div
+      v-if="mouse?.dataTransfer.length"
+      class="dtd-aux-cover-rect dragging"
+      :style="draggingCoverRectStyle"
+    ></div>
+    <div
+      v-if="currentTargetNode?.droppable"
+      class="dtd-aux-cover-rect dropping"
+      :style="droppingCoverRectStyle"
+    ></div>
   </div>
 </template>
 

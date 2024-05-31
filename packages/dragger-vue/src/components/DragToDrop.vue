@@ -3,7 +3,14 @@ import { inject, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import DtdRecursion from './DtdRecursion.vue'
 import DtdItem from './DtdItem.vue'
 import DtdAuxTool from './DtdAuxTool.vue'
-import { DtdNode, getNode, MouseEventType, DragNodeType, ISelectNode, Mouse } from '@oragspatl/dragger'
+import {
+  DtdNode,
+  getNode,
+  MouseEventType,
+  DragNodeType,
+  ISelectNode,
+  Mouse
+} from '@oragspatl/dragger'
 import { cursorAtContainerEdgeType } from '@oragspatl/dragger'
 import { DTD_MOUSE } from '../common/injectSymbol'
 
@@ -11,13 +18,16 @@ defineOptions({
   name: 'DragToDrop'
 })
 
-const props = withDefaults(defineProps<{
-  data: any[]
-  nodeClass?: string
-  dragType?: DragNodeType
-}>(), {
-  dragType: DragNodeType.MOVE
-})
+const props = withDefaults(
+  defineProps<{
+    data: any[]
+    nodeClass?: string
+    dragType?: DragNodeType
+  }>(),
+  {
+    dragType: DragNodeType.MOVE
+  }
+)
 
 const rootRef = ref<HTMLElement>()
 
@@ -29,12 +39,18 @@ const mouse = inject<Mouse>(DTD_MOUSE)
 
 const dragEndHandle = (e: MouseEvent, targetNode?: DtdNode) => {
   if (!mouse?.dataTransfer.length) return
-  if (targetNode && mouse?.dataTransfer.find((node: DtdNode) => node.isParentOf(targetNode))) return
+  if (
+    targetNode &&
+    mouse?.dataTransfer.find((node: DtdNode) => node.isParentOf(targetNode))
+  )
+    return
   nextTick(() => {
     emits('change', getData())
     dtdData.value = dtdData.value.clone()
     mouse?.setSelectedNodes(
-      mouse?.dataTransfer.map((node: DtdNode) => ({ node: getNode(node.dragId), e } as ISelectNode)),
+      mouse?.dataTransfer.map(
+        (node: DtdNode) => ({ node: getNode(node.dragId), e }) as ISelectNode
+      ),
       e,
       targetNode
     )
@@ -80,7 +96,7 @@ onMounted(() => {
   mouse?.on(MouseEventType.Dragging, draggingHandler)
 })
 onBeforeUnmount(() => {
-  if(rootRef.value) {
+  if (rootRef.value) {
     rootRef.value.removeEventListener('scroll', podScrollHandler)
   }
   mouse?.off(MouseEventType.DragEnd, dragEndHandle)
@@ -103,13 +119,20 @@ defineExpose({
 
 <template>
   <div ref="rootRef" class="dtd-render-root">
-    <dtd-item :data="dtdData" :disabled="dtdData.disabled" :class="!dtdData?.children?.length ? 'full' : ''">
+    <dtd-item
+      :data="dtdData"
+      :disabled="dtdData.disabled"
+      :class="!dtdData?.children?.length ? 'full' : ''"
+    >
       <DtdRecursion :nodeClass :node="dtdData">
         <template #default="{ item }">
           <slot :item="item" />
         </template>
       </DtdRecursion>
-      <dtd-aux-tool v-if="dtdData.dragType===DragNodeType.MOVE" :scrollPosition />
+      <dtd-aux-tool
+        v-if="dtdData.dragType === DragNodeType.MOVE"
+        :scrollPosition
+      />
     </dtd-item>
   </div>
 </template>

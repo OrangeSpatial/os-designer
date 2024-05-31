@@ -23,12 +23,8 @@
     "commit-msg": "npx --no -- commitlint --edit ${1}"
   },
   "lint-staged": {
-    "*.{js,json}": [
-      "prettier --write --ignore-unknown"
-    ],
-    "*.ts?(x)": [
-      "eslint",
-      "prettier --parser=typescript --write"
+    "packages/*/src/**/*.{js,ts,json,css,vue}": [
+      "prettier --write"
     ]
   },
   "keywords": [],
