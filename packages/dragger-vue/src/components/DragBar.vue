@@ -33,13 +33,18 @@ const mouse = inject<Mouse>(DTD_MOUSE)
 const startDrag = ref(false)
 
 const dragBarStyle = computed(() => {
+  const defaultStyle = {
+    backgroundColor: theme.value.primaryColor
+  }
   if (props.direction === 'horizontal') {
     return {
+      ...(startDrag.value ? defaultStyle : {}),
       top: props.position === 'start' ? 0 : undefined,
       bottom: props.position === 'end' ? 0 : undefined
     }
   } else if (props.direction === 'vertical') {
     return {
+      ...(startDrag.value ? defaultStyle : {}),
       left: props.position === 'start' ? 0 : undefined,
       right: props.position === 'end' ? 0 : undefined
     }
@@ -94,7 +99,7 @@ const onMouseMove = (event: MouseEvent) => {
     Math.min(Math.max(parentWidth, props.range[0]), props.range[1]) + 'px'
 }
 
-const onMouseUp = (event: MouseEvent) => {
+const onMouseUp = () => {
   if (mouse?.dragStatus === CursorStatus.Resizing) {
     mouse?.setDragStatus(CursorStatus.Normal)
   }
@@ -129,12 +134,12 @@ onUnmounted(() => {
 .horizontal {
   left: 0;
   right: 0;
-  height: 4px;
+  height: 2px;
   cursor: ns-resize;
 }
 
 .vertical {
-  width: 4px;
+  width: 2px;
   top: 0;
   bottom: 0;
   cursor: ew-resize;
