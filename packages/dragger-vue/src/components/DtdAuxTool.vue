@@ -16,24 +16,23 @@ import {
   getCursorPositionInDtdNode,
   getLayoutNodeInContainer,
   initStyle,
-  Mouse
+  Mouse,
+  KEYBOARD_EVENTS
 } from '@oragspatl/dragger'
 import AuxSelection from './selection/Index.vue'
 import AuxHelpers from './helpers/Index.vue'
 import { DTD_MOUSE } from '../common/injectSymbol'
 import { useTheme } from '../hooks/useTheme'
 
+const { theme }: any = useTheme()
 const props = withDefaults(
   defineProps<{
     insertionBgColor?: string
     scrollPosition: { scrollTop: number; scrollLeft: number }
   }>(),
-  {
-    insertionBgColor: '#1890ff'
-  }
+  {}
 )
 
-const { theme }: any = useTheme()
 const insertionStyle = ref<CSSProperties>()
 
 const draggingCoverRectStyle = ref<CSSProperties>(initStyle)
@@ -180,12 +179,15 @@ function resizeHandler() {
 onMounted(() => {
   mouse?.on(MouseEventType.Dragging, draggingHandler)
   mouse?.on(MouseEventType.DragEnd, dragEndHandler)
+  // update selected style when delete the node
+  mouse?.keyboard?.on(KEYBOARD_EVENTS.delete, resizeHandler)
   if (auxToolRef.value) ro.observe(auxToolRef.value)
 })
 
 onBeforeUnmount(() => {
   mouse?.on(MouseEventType.Dragging, draggingHandler)
   mouse?.on(MouseEventType.DragEnd, dragEndHandler)
+  mouse?.keyboard?.off(KEYBOARD_EVENTS.delete, resizeHandler)
   if (ro) {
     ro.disconnect()
   }
@@ -196,7 +198,10 @@ onBeforeUnmount(() => {
   <div :style="auxToolStyle" class="dtd-aux-tool" ref="auxToolRef">
     <div
       class="dtd-aux-insertion"
-      :style="{ ...insertionStyle, backgroundColor: insertionBgColor }"
+      :style="{
+        ...insertionStyle,
+        backgroundColor: insertionBgColor || theme.primaryColor
+      }"
     ></div>
     <div class="dtd-aux-dashed-box"></div>
     <aux-selection

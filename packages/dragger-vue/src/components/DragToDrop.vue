@@ -9,7 +9,8 @@ import {
   MouseEventType,
   DragNodeType,
   ISelectNode,
-  Mouse
+  Mouse,
+  KEYBOARD_EVENTS
 } from '@oragspatl/dragger'
 import { cursorAtContainerEdgeType } from '@oragspatl/dragger'
 import { DTD_MOUSE } from '../common/injectSymbol'
@@ -37,6 +38,19 @@ const dtdData = ref(new DtdNode({ children: [] }))
 
 const mouse = inject<Mouse>(DTD_MOUSE)
 
+function updateViewData(callback?: () => void) {
+  nextTick(() => {
+    emits('change', getData())
+    dtdData.value = dtdData.value.clone()
+    callback?.()
+  })
+}
+
+function deleteSelectedNodes() {
+  mouse?.deleteSelectedNodes()
+  updateViewData()
+}
+
 const dragEndHandle = (e: MouseEvent, targetNode?: DtdNode) => {
   if (!mouse?.dataTransfer.length) return
   if (
@@ -44,9 +58,7 @@ const dragEndHandle = (e: MouseEvent, targetNode?: DtdNode) => {
     mouse?.dataTransfer.find((node: DtdNode) => node.isParentOf(targetNode))
   )
     return
-  nextTick(() => {
-    emits('change', getData())
-    dtdData.value = dtdData.value.clone()
+  updateViewData(() => {
     mouse?.setSelectedNodes(
       mouse?.dataTransfer.map(
         (node: DtdNode) => ({ node: getNode(node.dragId), e }) as ISelectNode
@@ -94,6 +106,7 @@ onMounted(() => {
   mouse?.on(MouseEventType.DragEnd, dragEndHandle)
   // 拖拽中，如果拖拽至顶部或底部，左右边缘，自动滚动
   mouse?.on(MouseEventType.Dragging, draggingHandler)
+  mouse?.keyboard?.on(KEYBOARD_EVENTS.delete, deleteSelectedNodes)
 })
 onBeforeUnmount(() => {
   if (rootRef.value) {
@@ -101,6 +114,7 @@ onBeforeUnmount(() => {
   }
   mouse?.off(MouseEventType.DragEnd, dragEndHandle)
   mouse?.off(MouseEventType.Dragging, draggingHandler)
+  mouse?.keyboard?.off(KEYBOARD_EVENTS.delete, deleteSelectedNodes)
   DtdNode.clearCacheAll()
 })
 

@@ -402,4 +402,11 @@ export class Mouse {
       )
     }
   }
+
+  deleteSelectedNodes() {
+    this.selectedNodes.forEach(item => {
+      deleteNode(item.node)
+    })
+    this.selectedNodes = []
+  }
 }
