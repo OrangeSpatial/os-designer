@@ -133,11 +133,7 @@ defineExpose({
 
 <template>
   <div ref="rootRef" class="dtd-render-root">
-    <dtd-item
-      :data="dtdData"
-      :disabled="dtdData.disabled"
-      :class="!dtdData?.children?.length ? 'full' : ''"
-    >
+    <dtd-item :data="dtdData" :disabled="dtdData.disabled" class="full">
       <DtdRecursion :nodeClass :node="dtdData">
         <template #default="{ item }">
           <slot :item="item" />
