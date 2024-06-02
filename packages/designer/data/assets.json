@@ -1,0 +1,750 @@
+[
+    {
+        "id": "dfgh25g556df",
+        "componentName": "Input",
+        "category": "表单",
+        "group": "基础组件",
+        "title": "输入框",
+        "snippets": [
+            {
+                "schema": {
+                    "componentName": "Input",
+                    "props": {
+                        "placeholder": "请输入"
+                    }
+                }
+            }
+        ],
+        "configure": {
+            "props": [
+                {
+                    "name": "placeholder",
+                    "type": "String",
+                    "title": "占位符",
+                    "description": "输入框占位符",
+                    "x-defaultValue": "",
+                    "setter": "InputSetter"
+                },
+                {
+                    "name": "modelValue",
+                    "type": "String",
+                    "title": "默认值",
+                    "description": "输入框值",
+                    "x-defaultValue": "",
+                    "setter": "InputSetter"
+                },
+                {
+                    "name": "maxLength",
+                    "type": "Number",
+                    "title": "最大长度",
+                    "description": "输入框最大长度",
+                    "x-defaultValue": "",
+                    "setter": "InputNumberSetter"
+                },
+                {
+                    "name": "minLength",
+                    "type": "Number",
+                    "title": "最小长度",
+                    "description": "输入框最小长度",
+                    "x-defaultValue": "",
+                    "setter": "InputNumberSetter"
+                },
+                {
+                    "name": "disabled",
+                    "type": "Boolean",
+                    "title": "禁用",
+                    "description": "是否禁用",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                },
+                {
+                    "name": "readonly",
+                    "type": "Boolean",
+                    "title": "只读",
+                    "description": "是否只读",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                },
+                {
+                    "name": "clearable",
+                    "type": "Boolean",
+                    "title": "清空",
+                    "description": "是否可清空",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                },
+                {
+                    "name": "showPassword",
+                    "type": "Boolean",
+                    "title": "密码",
+                    "description": "是否显示密码",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                },
+                {
+                    "name": "showWordLimit",
+                    "type": "Boolean",
+                    "title": "字数统计",
+                    "description": "是否显示字数统计",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                },
+                {
+                    "name": "rows",
+                    "type": "Number",
+                    "title": "行数",
+                    "description": "输入框行数",
+                    "x-defaultValue": 2,
+                    "setter": "InputNumberSetter"
+                },
+                {
+                    "name": "autosize",
+                    "type": "Boolean",
+                    "title": "自适应高度",
+                    "description": "自适应高度",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                },
+                {
+                    "name": "autoComplete",
+                    "type": "String",
+                    "title": "自动完成",
+                    "description": "自动完成",
+                    "x-defaultValue": "off",
+                    "setter": "InputSetter"
+                },
+                {
+                    "name": "name",
+                    "type": "String",
+                    "title": "名称",
+                    "description": "输入框名称",
+                    "x-defaultValue": "",
+                    "setter": "InputSetter"
+                },
+                {
+                    "name": "formatter",
+                    "type": "Function",
+                    "title": "格式化",
+                    "description": "格式化输入值",
+                    "setter": "JSFunctionSetter"
+                },
+                {
+                    "name": "inputStyle",
+                    "type": "Object",
+                    "title": "输入框样式",
+                    "description": "输入框样式",
+                    "setter": "StyleSetter"
+                }
+            ],
+            "slots": [
+                {
+                    "name": "prefix",
+                    "title": "前缀",
+                    "description": "输入框前缀",
+                    "schema": {
+                        "componentName": "Icon"
+                    }
+                },
+                {
+                    "name": "suffix",
+                    "title": "后缀",
+                    "description": "输入框后缀",
+                    "schema": {
+                        "componentName": "Icon"
+                    }
+                },
+                {
+                    "name": "prepend",
+                    "title": "前置",
+                    "description": "输入框前置",
+                    "schema": {
+                        "componentName": "Icon"
+                    }
+                },
+                {
+                    "name": "append",
+                    "title": "后置",
+                    "description": "输入框后置",
+                    "schema": {
+                        "componentName": "Icon"
+                    }
+                }
+            ],
+            "events": [
+                {
+                    "name": "input",
+                    "title": "输入",
+                    "description": "输入框值变化时触发",
+                    "arguments": [
+                        {
+                            "name": "value",
+                            "type": "String",
+                            "description": "输入框值"
+                        }
+                    ]
+                },
+                {
+                    "name": "change",
+                    "title": "值变化",
+                    "description": "仅当 modelValue 改变时，当输入框失去焦点或用户按Enter时触发",
+                    "arguments": [
+                        {
+                            "name": "value",
+                            "type": "String",
+                            "description": "输入框值"
+                        }
+                    ]
+                },
+                {
+                    "name": "blur",
+                    "title": "失焦",
+                    "description": "输入框失焦时触发",
+                    "arguments": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "description": "原生事件对象"
+                        }
+                    ]
+                },
+                {
+                    "name": "focus",
+                    "title": "聚焦",
+                    "description": "输入框聚焦时触发",
+                    "arguments": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "description": "原生事件对象"
+                        }
+                    ]
+                },
+                {
+                    "name": "clear",
+                    "title": "清空",
+                    "description": "点击清空按钮时触发",
+                    "arguments": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "description": "原生事件对象"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "id": "tgfh4665474yjr",
+        "componentName": "Radio",
+        "category": "表单",
+        "group": "基础组件",
+        "title": "单选框",
+        "snippets": [
+            {
+                "schema": {
+                    "componentName": "Radio",
+                    "props": {
+                    }
+                }
+            }
+        ],
+        "configure": {
+            "props": [
+                {
+                    "name": "modelValue",
+                    "type": "String",
+                    "title": "默认值",
+                    "description": "单选框值",
+                    "x-defaultValue": "",
+                    "setter": "InputSetter"
+                },
+                {
+                    "name": "disabled",
+                    "type": "Boolean",
+                    "title": "禁用",
+                    "description": "是否禁用",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                },
+                {
+                    "name": "size",
+                    "type": "String",
+                    "title": "尺寸",
+                    "description": "单选框尺寸",
+                    "x-defaultValue": "medium",
+                    "setter": {
+                        "name": "SelectSetter",
+                        "props": {
+                            "options": [
+                                {
+                                    "value": "medium",
+                                    "label": "中等"
+                                },
+                                {
+                                    "value": "small",
+                                    "label": "小"
+                                },
+                                {
+                                    "value": "mini",
+                                    "label": "迷你"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "border",
+                    "type": "Boolean",
+                    "title": "边框",
+                    "description": "是否显示边框",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                },
+                {
+                    "name": "name",
+                    "type": "String",
+                    "title": "名称",
+                    "description": "单选框名称",
+                    "x-defaultValue": "",
+                    "setter": "InputSetter"
+                }
+            ],
+            "slots": [
+                {
+                    "name": "default",
+                    "title": "默认",
+                    "description": "单选框内容"
+                }
+            ],
+            "events": [
+                {
+                    "name": "change",
+                    "title": "值变化",
+                    "description": "单选框值变化时触发",
+                    "arguments": [
+                        {
+                            "name": "value",
+                            "type": "String",
+                            "description": "单选框值"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "id": "dfgh255sjdfh56df",
+        "componentName": "Checkbox",
+        "category": "表单",
+        "group": "基础组件",
+        "title": "多选框",
+        "snippets": [
+            {
+                "schema": {
+                    "componentName": "Checkbox",
+                    "props": {
+                    }
+                }
+            }
+        ],
+        "configure": {
+            "props": [
+                {
+                    "name": "modelValue",
+                    "type": "Array",
+                    "title": "默认值",
+                    "description": "多选框值",
+                    "x-defaultValue": [],
+                    "setter": {
+                        "name": "ArraySetter",
+                        "props": {
+                        }
+                    }
+                },
+                {
+                    "name": "disabled",
+                    "type": "Boolean",
+                    "title": "禁用",
+                    "description": "是否禁用",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                },
+                {
+                    "name": "size",
+                    "type": "String",
+                    "title": "尺寸",
+                    "description": "多选框尺寸",
+                    "x-defaultValue": "medium",
+                    "setter": {
+                        "name": "SelectSetter",
+                        "props": {
+                            "options": [
+                                {
+                                    "value": "medium",
+                                    "label": "中等"
+                                },
+                                {
+                                    "value": "small",
+                                    "label": "小"
+                                },
+                                {
+                                    "value": "mini",
+                                    "label": "迷你"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "border",
+                    "type": "Boolean",
+                    "title": "边框",
+                    "description": "是否显示边框",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                }
+            ],
+            "slots": [
+                {
+                    "name": "default",
+                    "title": "默认",
+                    "description": "多选框内容"
+                }
+            ],
+            "events": [
+                {
+                    "name": "change",
+                    "title": "值变化",
+                    "description": "多选框值变化时触发",
+                    "arguments": [
+                        {
+                            "name": "value",
+                            "type": "Array",
+                            "description": "多选框值"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "id": "dfgh2rt5556df",
+        "componentName": "Select",
+        "category": "表单",
+        "group": "基础组件",
+        "title": "选择器",
+        "snippets": [
+            {
+                "schema": {
+                    "componentName": "Select",
+                    "props": {
+                        "placeholder": "请选择"
+                    }
+                }
+            }
+        ],
+        "configure": {
+            "props": [
+                {
+                    "name": "modelValue",
+                    "type": "String",
+                    "title": "默认值",
+                    "description": "选择器值",
+                    "x-defaultValue": "",
+                    "setter": "InputSetter"
+                },
+                {
+                    "name": "disabled",
+                    "type": "Boolean",
+                    "title": "禁用",
+                    "description": "是否禁用",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                },
+                {
+                    "name": "clearable",
+                    "type": "Boolean",
+                    "title": "清空",
+                    "description": "是否可清空",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                },
+                {
+                    "name": "placeholder",
+                    "type": "String",
+                    "title": "占位符",
+                    "description": "选择器占位符",
+                    "x-defaultValue": "",
+                    "setter": "InputSetter"
+                },
+                {
+                    "name": "size",
+                    "type": "String",
+                    "title": "尺寸",
+                    "description": "选择器尺寸",
+                    "x-defaultValue": "medium",
+                    "setter": {
+                        "name": "SelectSetter",
+                        "props": {
+                            "options": [
+                                {
+                                    "value": "medium",
+                                    "label": "中等"
+                                },
+                                {
+                                    "value": "small",
+                                    "label": "小"
+                                },
+                                {
+                                    "value": "mini",
+                                    "label": "迷你"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "border",
+                    "type": "Boolean",
+                    "title": "边框",
+                    "description": "是否显示边框",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                },
+                {
+                    "name": "multiple",
+                    "type": "Boolean",
+                    "title": "多选",
+                    "description": "是否多选",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                },
+                {
+                    "name": "filterable",
+                    "type": "Boolean",
+                    "title": "搜索",
+                    "description": "是否可搜索",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                },
+                {
+                    "name": "name",
+                    "type": "String",
+                    "title": "名称",
+                    "description": "选择器名称",
+                    "x-defaultValue": "",
+                    "setter": "InputSetter"
+                },
+                {
+                    "name": "valueKey",
+                    "type": "String",
+                    "title": "值键",
+                    "description": "作为 value 唯一标识的键名，绑定值为对象类型时必填",
+                    "x-defaultValue": "", 
+                    "setter": "InputSetter"
+                },
+                {
+                    "name": "collapseTags",
+                    "type": "Boolean",
+                    "title": "折叠",
+                    "description": "多选时是否将选中值按文字的形式展示",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                },
+                {
+                    "name": "allow-create",
+                    "type": "Boolean",
+                    "title": "允许创建选项",
+                    "description": "是否允许用户创建新条目， 只有当 filterable 设置为 true 时才会生效。",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                },
+                {
+                    "name": "loading",
+                    "type": "Boolean",
+                    "title": "加载",
+                    "description": "是否正在从远程获取数据",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                },
+                {
+                    "name": "remote",
+                    "type": "Boolean",
+                    "title": "远程",
+                    "description": "是否为远程搜索",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                },
+                {
+                    "name": "remoteMethod",
+                    "type": "Function",
+                    "title": "远程方法",
+                    "description": "远程搜索方法",
+                    "setter": "JSFunctionSetter"
+                },
+                {
+                    "name": "loadingText",
+                    "type": "String",
+                    "title": "加载文本",
+                    "description": "远程加载时显示的文字",
+                    "x-defaultValue": "加载中",
+                    "setter": "InputSetter"
+                },
+                {
+                    "name": "noMatchText",
+                    "type": "String",
+                    "title": "无匹配文本",
+                    "description": "搜索条件无匹配时显示的文字",
+                    "x-defaultValue": "无匹配数据",
+                    "setter": "InputSetter"
+                },
+                {
+                    "name": "noDataText",
+                    "type": "String",
+                    "title": "无数据文本",
+                    "description": "选项为空时显示的文字",
+                    "x-defaultValue": "无数据",
+                    "setter": "InputSetter"
+                },
+                {
+                    "name": "popperClass",
+                    "type": "String",
+                    "title": "弹出类",
+                    "description": "Select 下拉框的类名",
+                    "x-defaultValue": "",
+                    "setter": "InputSetter"
+                },
+                {
+                    "name": "reserveKeyword",
+                    "type": "Boolean",
+                    "title": "保留关键字",
+                    "description": "多选且可搜索时，是否在选中一个选项后保留当前的搜索关键字",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                },
+                {
+                    "name": "defaultFirstOption",
+                    "type": "Boolean",
+                    "title": "默认首选项",
+                    "description": "在输入框按下回车，选择第一个匹配项。需配合 filterable 或 remote 使用",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                },
+                {
+                    "name": "automaticDropdown",
+                    "type": "Boolean",
+                    "title": "自动下拉",
+                    "description": "对于不可搜索的 Select，是否在输入框获得焦点后自动弹出选项菜单",
+                    "x-defaultValue": false,
+                    "setter": "SwitchSetter"
+                }
+            ],
+            "slots": [
+                {
+                    "name": "default",
+                    "title": "默认",
+                    "description": "option 组件列表, Option Group / Option",
+                    "childWhiteList": [
+                        "Option",
+                        "OptionGroup"
+                    ]
+                },
+                {
+                    "name": "prefix",
+                    "title": "前缀",
+                    "description": "Select 组件头部内容"
+                },
+                {
+                    "name": "header",
+                    "title": "option 头部",
+                    "description": "下拉列表顶部的内容"
+                },
+                {
+                    "name": "footer",
+                    "title": "option 底部",
+                    "description": "下拉列表底部的内容"
+                },
+                {
+                    "name": "empty",
+                    "title": "空",
+                    "description": "下拉列表为空时的内容"
+                }
+            ],
+            "events": [
+                {
+                    "name": "change",
+                    "title": "值变化",
+                    "description": "选择器值变化时触发",
+                    "arguments": [
+                        {
+                            "name": "value",
+                            "type": "String",
+                            "description": "选择器值"
+                        }
+                    ]
+                },
+                {
+                    "name": "visible-change",
+                    "title": "可见变化",
+                    "description": "下拉框出现/隐藏时触发",
+                    "arguments": [
+                        {
+                            "name": "visible",
+                            "type": "Boolean",
+                            "description": "下拉框是否可见"
+                        }
+                    ]
+                },
+                {
+                    "name": "remove-tag",
+                    "title": "移除标签",
+                    "description": "多选模式下移除tag时触发",
+                    "arguments": [
+                        {
+                            "name": "value",
+                            "type": "String",
+                            "description": "移除tag的值"
+                        }
+                    ]
+                },
+                {
+                    "name": "clear",
+                    "title": "清空",
+                    "description": "可清空的单选模式下用户点击清空按钮时触发",
+                    "arguments": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "description": "原生事件对象"
+                        }
+                    ]
+                },
+                {
+                    "name": "blur",
+                    "title": "失焦",
+                    "description": "选择器失焦时触发",
+                    "arguments": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "description": "原生事件对象"
+                        }
+                    ]
+                },
+                {
+                    "name": "focus",
+                    "title": "聚焦",
+                    "description": "选择器聚焦时触发",
+                    "arguments": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "description": "原生事件对象"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+]

@@ -2,18 +2,17 @@
     <div :class="genCls('designer-main')">
         <dtd-pod class="dtd-root">
             <DesignerExplorer>
-                <DragToDrop drag-type="copy" class="dtd-copy-nodes" :data="data"
-                    @change="d => data = d">
+                <DragToDrop drag-type="copy" class="dtd-copy-nodes" :data="assets">
                     <template #default="{ item }">
-                        <div class="dtd-item copy-item">{{ item.props?.name }}</div>
+                        <div class="dtd-item copy-item">{{ item.props?.componentName }}</div>
                     </template>
                 </DragToDrop>
                 <drag-bar position="end" direction="vertical" :range="[100, 500]"></drag-bar>
             </DesignerExplorer>
             <DesignerWorkspace>
-                <DragToDrop class="dtd-render-container" nodeClass="dtd-render-node-class" :data="data1" @change="d => data1 = d">
+                <DragToDrop class="dtd-render-container" nodeClass="dtd-render-node-class" :data="data1">
                     <template #default="{ item }">
-                        <div class="dtd-item">{{ item.props?.name }}</div>
+                        <div class="dtd-item">{{ item.props?.componentName }}</div>
                     </template>
                 </DragToDrop>
             </DesignerWorkspace>
@@ -22,7 +21,7 @@
                 right
             </DesignerExplorer>
             <template #ghost="{ items }">
-                <div class="ghost-class">{{ items?.[0].name }}</div>
+                <div class="ghost-class">{{ items?.[0].componentName }}</div>
             </template>
         </dtd-pod>
     </div>
@@ -34,36 +33,11 @@ import DesignerExplorer from "./explorer/Index.vue";
 import DesignerWorkspace from "./workspace/Index.vue";
 import { ref } from "vue";
 
-const data = ref([
-    {
-        id: 12,
-        name: 'Input',
-    },
-    {
-        id: 13,
-        name: 'Button',
-    },
-    {
-        id: 14,
-        name: 'Card',
-        droppable: true
-    }
-])
+const props = defineProps<{
+    assets: any[]
+}>()
 
-const data1 = ref([
-            {
-                id: 15,
-                name: 'CardHeader',
-            },
-            {
-                id: 16,
-                name: 'CardBody',
-            },
-            {
-                id: 17,
-                name: 'CardFooter',
-            },
-        ])
+const data1 = ref([])
 </script>
 
 <style lang="scss">

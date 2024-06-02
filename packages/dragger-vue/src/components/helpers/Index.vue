@@ -9,7 +9,7 @@
     class="dtd-aux-helpers"
     :class="[isTouchedTop ? 'bottom-right' : 'top-right']"
   >
-    {{ node.selectNode?.props?.name }}
+    {{ node.selectNode?.props?.componentName }}
   </div>
 </template>
 

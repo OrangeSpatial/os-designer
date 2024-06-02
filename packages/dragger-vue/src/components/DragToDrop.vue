@@ -24,6 +24,7 @@ const props = withDefaults(
     data: any[]
     nodeClass?: string
     dragType?: DragNodeType
+    dtdClass?: string
   }>(),
   {
     dragType: DragNodeType.MOVE
@@ -133,7 +134,12 @@ defineExpose({
 
 <template>
   <div ref="rootRef" class="dtd-render-root">
-    <dtd-item :data="dtdData" :disabled="dtdData.disabled" class="full">
+    <dtd-item
+      :data="dtdData"
+      :disabled="dtdData.disabled"
+      class="full"
+      :class="props.dtdClass || ''"
+    >
       <DtdRecursion :nodeClass :node="dtdData">
         <template #default="{ item }">
           <slot :item="item" />
