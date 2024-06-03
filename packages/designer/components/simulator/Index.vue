@@ -74,6 +74,27 @@ function changeSize() {
         display: flex;
         align-items: center;
         padding: 4px 4px;
+
+        :deep(.el-button--small) {
+            width: 14px;
+            height: 14px;
+            font-size: 8px;
+            font-weight: bold;
+        }
+
+        .el-button+.el-button {
+            margin-left: 4px;
+        }
+
+        .el-button--warning {
+            background-color: #f4bf4f;
+            color: #000000;
+        }
+
+        .el-button--success {
+            background-color: #61c554;
+            color: #000000;
+        }
     }
 
     .simulator-container {
