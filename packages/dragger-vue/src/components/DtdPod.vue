@@ -40,7 +40,7 @@ function dragEndHandler(e: MouseEvent, targetNode?: DtdNode) {
   const isVertical =
     getLayoutNodeInContainer(positionObj.targetEl) === NodeLayout.VERTICAL
   const insertBefore = isVertical
-    ? positionObj.insertBefore || positionObj.isTop
+    ? positionObj.insertBefore
     : positionObj.isLeft
   mouse.insertNode(
     targetNode,

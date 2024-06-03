@@ -1,4 +1,4 @@
-import { NodeLayout, ICursorPosition } from '../model'
+import { NodeLayout, ICursorPosition, getNode } from '../model'
 import { DTD_BASE_KEY, edgeGap } from './presets'
 
 export function getClosestDtdNode(e: MouseEvent) {
@@ -17,6 +17,8 @@ export function getElementByDtdId(
 export function getCursorPositionInDtdNode(e: MouseEvent) {
   const target = getClosestDtdNode(e)
   if (!target) return null
+  const dragId = getClosestDtdNode(e)?.getAttribute(DTD_BASE_KEY) as string
+  const targetNode = getNode(dragId)
   const rect = target.getBoundingClientRect()
   const { clientX, clientY } = e
   const { left, top, width, height } = rect
@@ -24,13 +26,29 @@ export function getCursorPositionInDtdNode(e: MouseEvent) {
   const isLeft = clientX < left + width / 3
   const isRight = clientX > left + width / 3
   const isBottom = clientY > top + height / 2
+
+  let insertBefore = false
+
+  // 如果鼠标位置在容器内，且不在边缘，insertBefore为false
+  if (
+    targetNode?.droppable &&
+    clientX > left &&
+    clientX < left + width &&
+    clientY > top &&
+    clientY < top + height
+  ) {
+    insertBefore = false
+  } else {
+    insertBefore = isTop || isLeft
+  }
+
   return {
     rect,
     isTop,
     isLeft,
     isRight,
     isBottom,
-    insertBefore: isTop && isLeft,
+    insertBefore,
     targetEl: target
   }
 }
