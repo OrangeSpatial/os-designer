@@ -7,7 +7,7 @@ export default defineConfig({
       entry: 'src/index.ts'
     },
     rollupOptions: {
-      external: [],
+      external: ['vue'],
       output: [
         {
           format: 'es',

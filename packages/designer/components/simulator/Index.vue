@@ -16,7 +16,6 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { ElButton } from "element-plus";
 import { Switch, Plus, Minus } from "@element-plus/icons-vue";
 
 const sizes = [
@@ -80,6 +79,7 @@ function changeSize() {
             height: 14px;
             font-size: 8px;
             font-weight: bold;
+            border: none;
         }
 
         .el-button+.el-button {
@@ -89,11 +89,19 @@ function changeSize() {
         .el-button--warning {
             background-color: #f4bf4f;
             color: #000000;
+
+            &:hover {
+                background-color: #f4db4f;
+            }
         }
 
         .el-button--success {
             background-color: #61c554;
             color: #000000;
+
+            &:hover {
+                background-color: #65de55;
+            }
         }
     }
 

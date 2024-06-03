@@ -10,9 +10,9 @@
                 <drag-bar position="end" direction="vertical" :range="[100, 500]"></drag-bar>
             </DesignerExplorer>
             <DesignerWorkspace>
-                <DragToDrop class="dtd-render-container" nodeClass="dtd-render-node-class" :data="data1">
+                <DragToDrop class="dtd-render-container" nodeClass="dtd-render-node-class" :data="data">
                     <template #default="{ item }">
-                        <div class="dtd-item">{{ item.props?.componentName }}</div>
+                        <NodeRender :schema="item.props.schema" />
                     </template>
                 </DragToDrop>
             </DesignerWorkspace>
@@ -31,13 +31,24 @@
 import { genCls, DragBar } from "@oragspatl/dragger-vue";
 import DesignerExplorer from "./explorer/Index.vue";
 import DesignerWorkspace from "./workspace/Index.vue";
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
+import NodeRender from "../render/Index.vue";
+import { registerComponents } from "@oragspatl/renderer";
+import { elComponents } from "../../plugins/elementPlus";
 
 const props = defineProps<{
     assets: any[]
 }>()
 
-const data1 = ref([])
+watchEffect(() => {
+    const components = props.assets.reduce((acc, cur) => {
+        acc[cur.componentName] = elComponents[cur.componentName]
+        return acc
+    }, {})
+    registerComponents(components)
+})
+
+const data = ref([])
 </script>
 
 <style lang="scss">
@@ -57,10 +68,12 @@ const data1 = ref([])
                 flex-direction: column;
                 gap: 10px;
             }
+
             .dtd-render-node-class {
                 padding: 10px;
-                border: 1px solid var(--os-operation-border-color);
+                // border: 1px solid var(--os-operation-border-color);
             }
+
             .dtd-render-container {
                 background-color: #fff;
             }
@@ -73,7 +86,7 @@ const data1 = ref([])
 
         .copy-item {
             border-radius: 4px;
-            
+
             &:hover {
                 background-color: var(--os-primary-color);
                 color: white;

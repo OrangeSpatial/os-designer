@@ -39,7 +39,7 @@ export function getCursorPositionInDtdNode(e: MouseEvent) {
   ) {
     insertBefore = false
   } else {
-    insertBefore = isTop || isLeft
+    insertBefore = isTop
   }
 
   return {
