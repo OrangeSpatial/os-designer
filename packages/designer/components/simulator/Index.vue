@@ -3,10 +3,12 @@
         width: simulatorWidth,
     }">
         <div class="simulator-header-bar">
-            <el-button @click="changeSize" type="warning" :icon="Switch" size="small" circle alt="切换尺寸" />
-            <el-button @click="maxMinChange" v-if="!maxSize" alt="最小化/最大化" type="success" :icon="Plus" size="small"
-                circle />
-            <el-button @click="maxMinChange" v-else alt="最小化/最大化" type="success" :icon="Minus" size="small" circle />
+            <a-button @click="changeSize" class="yellow" type="primary" shape="circle" :icon="h(ColumnWidthOutlined)"
+                size="small" alt="切换尺寸" />
+            <a-button @click="maxMinChange" class="green" v-if="!maxSize" alt="最小化/最大化" type="primary" shape="circle"
+                :icon="h(ArrowsAltOutlined)" size="small" />
+            <a-button @click="maxMinChange" class="green" v-else alt="最小化/最大化" type="primary" shape="circle"
+                :icon="h(ShrinkOutlined)" size="small" />
         </div>
         <div class="simulator-container">
             <slot></slot>
@@ -15,8 +17,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { Switch, Plus, Minus } from "@element-plus/icons-vue";
+import { ref, computed, h } from "vue";
+import { ArrowsAltOutlined, ShrinkOutlined, ColumnWidthOutlined } from "@ant-design/icons-vue";
 
 const sizes = [
     '375px',
@@ -72,30 +74,31 @@ function changeSize() {
         border-radius: 10px 10px 0 0;
         display: flex;
         align-items: center;
-        padding: 4px 4px;
+        padding: 8px 8px;
 
-        :deep(.el-button--small) {
+        :deep(.ant-btn) {
             width: 14px;
             height: 14px;
+            min-width: 12px;
             font-size: 8px;
             font-weight: bold;
             border: none;
         }
 
-        .el-button+.el-button {
-            margin-left: 4px;
+        .ant-btn+.ant-btn {
+            margin-left: 6px;
         }
 
-        .el-button--warning {
+        .yellow {
             background-color: #f4bf4f;
             color: #000000;
 
             &:hover {
-                background-color: #f4db4f;
+                background-color: rgb(251, 223, 65);
             }
         }
 
-        .el-button--success {
+        .green {
             background-color: #61c554;
             color: #000000;
 

@@ -1,9 +1,9 @@
 import { createApp } from 'vue'
 import Designer from './components/Designer.vue'
 import DragToDrop from '@oragspatl/dragger-vue'
-import installElementPlus from './plugins/elementPlus'
+import installAntv from './plugins/antv'
 
 const app = createApp(Designer)
 app.use(DragToDrop)
-installElementPlus(app)
+installAntv(app)
 app.mount('#app')

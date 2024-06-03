@@ -2,11 +2,9 @@
     <div :class="genCls('designer-main')">
         <dtd-pod class="dtd-root">
             <DesignerExplorer>
-                <DragToDrop drag-type="copy" class="dtd-copy-nodes" :data="assets">
-                    <template #default="{ item }">
-                        <div class="dtd-item copy-item">{{ item.props?.componentName }}</div>
-                    </template>
-                </DragToDrop>
+                <os-tabs :options="tabOptions" v-model="activeTabName" />
+                <os-assets v-show="activeTabName === 'Assets'" :assets="assets" />
+                <os-layers v-show="activeTabName === 'Layers'" />
                 <drag-bar position="end" direction="vertical" :range="[100, 500]"></drag-bar>
             </DesignerExplorer>
             <DesignerWorkspace>
@@ -34,7 +32,10 @@ import DesignerWorkspace from "./workspace/Index.vue";
 import { ref, watchEffect } from "vue";
 import NodeRender from "../render/Index.vue";
 import { registerComponents } from "@oragspatl/renderer";
-import { elComponents } from "../../plugins/elementPlus";
+import { antvComponents } from "../../plugins/antv";
+import OsAssets from "./assets/Index.vue";
+import OsLayers from "./layers/Index.vue";
+import OsTabs from "./explorer/Tabs.vue";
 
 const props = defineProps<{
     assets: any[]
@@ -42,13 +43,17 @@ const props = defineProps<{
 
 watchEffect(() => {
     const components = props.assets.reduce((acc, cur) => {
-        acc[cur.componentName] = elComponents[cur.componentName]
+        acc[cur.componentName] = antvComponents[cur.componentName]
         return acc
     }, {})
     registerComponents(components)
 })
 
 const data = ref([])
+
+const tabOptions = ref(['Assets', 'Layers'])
+const activeTabName = ref('Assets')
+
 </script>
 
 <style lang="scss">
@@ -56,7 +61,6 @@ const data = ref([])
 
 .#{$prefix} {
     &-designer-main {
-        color: var(--os-operation-color);
         height: calc(100% - var(--os-header-height));
 
         .dtd-root {

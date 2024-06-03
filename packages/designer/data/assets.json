@@ -1,12 +1,12 @@
 [
   {
     "id": "dfgh25g556df",
-    "componentName": "ElInput",
+    "componentName": "Input",
     "category": "表单",
     "group": "基础组件",
     "title": "输入框",
     "schema": {
-      "componentName": "ElInput",
+      "componentName": "Input",
       "props": {
         "placeholder": "请输入"
       }
@@ -232,12 +232,12 @@
   },
   {
     "id": "tgfh4665474yjr",
-    "componentName": "ElRadio",
+    "componentName": "Radio",
     "category": "表单",
     "group": "基础组件",
     "title": "单选框",
     "schema": {
-      "componentName": "ElRadio",
+      "componentName": "Radio",
       "props": {}
     },
     "configure": {
@@ -326,12 +326,12 @@
   },
   {
     "id": "dfgh255sjdfh56df",
-    "componentName": "ElCheckbox",
+    "componentName": "Checkbox",
     "category": "表单",
     "group": "基础组件",
     "title": "多选框",
     "schema": {
-      "componentName": "ElCheckbox",
+      "componentName": "Checkbox",
       "props": {}
     },
     "configure": {
@@ -415,12 +415,12 @@
   },
   {
     "id": "dfgh2rt5556df",
-    "componentName": "ElSelect",
+    "componentName": "Select",
     "category": "表单",
     "group": "基础组件",
     "title": "选择器",
     "schema": {
-      "componentName": "ElSelect",
+      "componentName": "Select",
       "props": {
         "placeholder": "请选择"
       }
@@ -592,7 +592,7 @@
           "name": "popperClass",
           "type": "String",
           "title": "弹出类",
-          "description": "ElSelect 下拉框的类名",
+          "description": "Select 下拉框的类名",
           "x-defaultValue": "",
           "setter": "InputSetter"
         },
@@ -631,7 +631,7 @@
         {
           "name": "prefix",
           "title": "前缀",
-          "description": "ElSelect 组件头部内容"
+          "description": "Select 组件头部内容"
         },
         {
           "name": "header",

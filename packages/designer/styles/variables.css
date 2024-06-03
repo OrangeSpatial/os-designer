@@ -2,10 +2,13 @@
 /** 背景色 */
 :root {
 
-    --os-primary-color: #811ff1;
-    --os-primary-color-hover: #6a1ad6;
-    --os-primary-color-active: #5c159e;
+    --os-primary-color: #1e9eb3;
+    --os-primary-color-hover: #1e9eb3;
+    --os-primary-color-active: #1e9eb3;
     --os-primary-color-disabled: #d9d9d9;
+
+    --os-primary-font-light-color: #ffffff;
+    --os-primary-font-dark-color: #23272d;
 
     --os-primary-bg-color: #23272d;
     --os-primary-bg-color-hover: #2d3138;
