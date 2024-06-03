@@ -4,10 +4,7 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   build: {
     lib: {
-      entry: 'src/index.ts',
-      name: 'dragger',
-      // formats: ["es", "umd", "cjs"],
-      fileName: format => `dragger.${format}.js`
+      entry: 'src/index.ts'
     },
     rollupOptions: {
       external: [],
@@ -21,12 +18,10 @@ export default defineConfig({
           dir: 'dist/es'
         },
         {
-          format: 'cjs',
-          entryFileNames: '[name].js',
-          preserveModules: true,
-          preserveModulesRoot: 'src',
-          exports: 'named',
-          dir: 'dist/lib'
+          format: 'umd',
+          name: 'dragger.umd',
+          entryFileNames: 'dragger.umd.js',
+          dir: 'dist/umd'
         }
       ]
     }

@@ -1,6 +1,6 @@
 {
   "name": "@oragspatl/dragger-vue",
-  "version": "0.1.0",
+  "version": "0.2.2",
   "description": "A draggable component for low code, based on vue3 and vite.",
   "types": "dist/types/index.d.ts",
   "module": "dist/es/index.mjs",
@@ -37,6 +37,7 @@
   "license": "MIT",
   "dependencies": {
     "@oragspatl/dragger": "workspace:*",
+    "resize-observer-polyfill": "^1.5.1",
     "vue": "^3.4.27"
   },
   "devDependencies": {

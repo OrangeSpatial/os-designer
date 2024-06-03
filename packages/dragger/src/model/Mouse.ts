@@ -1,4 +1,4 @@
-import { DtdNode, getNode } from './DtdNode'
+import { DtdNode, deleteNode, getNode } from './DtdNode'
 import {
   getClosestDtdNode,
   removeGhostElStyle,
@@ -11,7 +11,8 @@ import { Keyboard } from './Keyboard'
 
 export enum CursorStatus {
   Normal = 'NORMAL',
-  Dragging = 'DRAGGING'
+  Dragging = 'DRAGGING',
+  Resizing = 'RESIZING'
 }
 
 export enum CursorDragType {
@@ -26,12 +27,16 @@ export enum CursorDragType {
   Auto = 'AUTO'
 }
 
-export enum DragEventType {
+export enum MouseEventType {
   DragStart = 'dragstart',
   Dragging = 'dragging',
   DragEnd = 'dragend',
   Select = 'select',
-  Click = 'click'
+
+  Click = 'click',
+  Move = 'move',
+  Down = 'down',
+  Up = 'up'
 }
 
 export enum DragNodeType {
@@ -88,7 +93,7 @@ export class Mouse {
   position: ICursorPosition = DEFAULT_POSITION
   dragStartPosition: ICursorPosition = DEFAULT_POSITION
   dragEndPosition: ICursorPosition = DEFAULT_POSITION
-  dragStatus: CursorStatus | string = CursorStatus.Normal
+  dragStatus: CursorStatus = CursorStatus.Normal
 
   dragElement: HTMLElement | null = null
 
@@ -98,7 +103,7 @@ export class Mouse {
 
   dataTransfer: DtdNode[] = []
 
-  startEvent: MouseEvent = new MouseEvent('')
+  startEvent: MouseEvent | null = null
   startTime: number = 0
 
   eventCallbacks = new Map<
@@ -123,7 +128,7 @@ export class Mouse {
     this.selectedNodes = nodes.sort((a, b) => {
       return sortMouseEvents(a.e, b.e)
     })
-    this.eventCallbacks.get(DragEventType.Select)?.forEach(cb => {
+    this.eventCallbacks.get(MouseEventType.Select)?.forEach(cb => {
       cb(e, targetNode)
     })
   }
@@ -137,7 +142,7 @@ export class Mouse {
     this.podElement = podElement
   }
 
-  public setDragStatus(status: CursorStatus | string): void {
+  public setDragStatus(status: CursorStatus): void {
     this.dragStatus = status
   }
 
@@ -157,7 +162,7 @@ export class Mouse {
   }
 
   on(
-    eventType: DragEventType,
+    eventType: MouseEventType,
     callback: (e: MouseEvent, targetNode?: DtdNode) => void
   ) {
     if (!eventType || !callback) return
@@ -170,7 +175,7 @@ export class Mouse {
   }
 
   off(
-    eventType: DragEventType,
+    eventType: MouseEventType,
     callback: (e: MouseEvent, targetNode: DtdNode) => void
   ) {
     if (!eventType || !callback) return
@@ -184,6 +189,7 @@ export class Mouse {
   }
 
   isValidClick(e: MouseEvent) {
+    if (!this.startEvent) return false
     const distance = Math.sqrt(
       Math.pow(e.pageX - this.startEvent.pageX, 2) +
         Math.pow(e.pageY - this.startEvent.pageY, 2)
@@ -192,7 +198,18 @@ export class Mouse {
     return distance <= 3 && timeDelta < 300
   }
 
+  isWillDrag(e: MouseEvent) {
+    const dragElement = getClosestDtdNode(e)
+    return !!dragElement?.getAttribute(DTD_BASE_KEY)
+  }
+
   isValidDragStart(e: MouseEvent) {
+    if (
+      !this.startEvent ||
+      this.startEvent.button === 2 ||
+      ![CursorStatus.Normal, CursorStatus.Dragging].includes(this.dragStatus)
+    )
+      return false
     const distance = Math.sqrt(
       Math.pow(e.pageX - this.startEvent.pageX, 2) +
         Math.pow(e.pageY - this.startEvent.pageY, 2)
@@ -205,6 +222,13 @@ export class Mouse {
     if (this.dragStatus === CursorStatus.Dragging) return
     const dragElement = getClosestDtdNode(e)
     if (!dragElement) return
+    this.dragElement = dragElement
+    // 设置数据
+    const dragId = dragElement?.getAttribute(DTD_BASE_KEY)
+    if (!dragId) return
+    // 正在拖拽的node
+    const node = getNode(dragId)
+    if (!node || !node.parent) return
     this.setDragStatus(CursorStatus.Dragging)
     this.setDragStartPosition({
       pageX: e.pageX,
@@ -214,32 +238,25 @@ export class Mouse {
     })
     // 设置样式
     setCursorStyle(window, CursorDragType.Grabbing)
-    this.dragElement = dragElement
-    // 设置数据
-    const dragId = dragElement?.getAttribute(DTD_BASE_KEY)
-    if (dragId) {
-      // 正在拖拽的node
-      const node = getNode(dragId)
-      if (node?.root.dragType === DragNodeType.COPY) {
-        setCursorStyle(window, CursorDragType.Copy)
+    if (node?.root.dragType === DragNodeType.COPY) {
+      setCursorStyle(window, CursorDragType.Copy)
+    }
+    if (node) {
+      // 如果node在选中的节点里面，携带选中的所有节点
+      if (this.selectedNodes.find(item => item.node.dragId === node.dragId)) {
+        this.dataTransfer = this.selectedNodes.map(item => item.node)
+      } else if (!this.dataTransfer.includes(node)) {
+        this.dataTransfer = [node]
+        this.setSelectedNodes([], e)
       }
-      if (node) {
-        // 如果node在选中的节点里面，携带选中的所有节点
-        if (this.selectedNodes.find(item => item.node.dragId === node.dragId)) {
-          this.dataTransfer = this.selectedNodes.map(item => item.node)
-        } else if (!this.dataTransfer.includes(node)) {
-          this.dataTransfer = [node]
-        }
-        this.eventCallbacks.get(DragEventType.DragStart)?.forEach(cb => {
-          cb(e, node)
-        })
-      }
+      this.eventCallbacks.get(MouseEventType.DragStart)?.forEach(cb => {
+        cb(e, node)
+      })
     }
   }
 
   onDragMove(e: MouseEvent) {
     if (this.dragStatus !== CursorStatus.Dragging) return
-    e.preventDefault()
     this.setCursorPosition({
       pageX: e.pageX,
       pageY: e.pageY,
@@ -250,7 +267,7 @@ export class Mouse {
     const target = getClosestDtdNode(e) as HTMLElement
     const dragId = target?.getAttribute(DTD_BASE_KEY) as string
     const targetNode = getNode(dragId)
-    this.eventCallbacks.get(DragEventType.Dragging)?.forEach(cb => {
+    this.eventCallbacks.get(MouseEventType.Dragging)?.forEach(cb => {
       cb(e, targetNode)
     })
   }
@@ -267,7 +284,7 @@ export class Mouse {
       clientY: e.clientY
     })
     // 事件
-    this.eventCallbacks.get(DragEventType.DragEnd)?.forEach(cb => {
+    this.eventCallbacks.get(MouseEventType.DragEnd)?.forEach(cb => {
       const dragId = getClosestDtdNode(e)?.getAttribute(DTD_BASE_KEY) as string
       const targetNode = getNode(dragId)
       cb(e, targetNode)
@@ -287,36 +304,109 @@ export class Mouse {
       this.onDragStart(e)
       this.onDragMove(e)
     }
+    this.eventCallbacks.get(MouseEventType.Move)?.forEach(cb => {
+      cb(e)
+    })
   }
 
   public down = (e: MouseEvent) => {
-    this.startEvent = e
-    this.startTime = Date.now()
-    document.addEventListener('mousemove', this.move)
-    document.addEventListener('mouseup', this.up)
+    this.eventCallbacks.get(MouseEventType.Down)?.forEach(cb => {
+      cb(e)
+    })
+    if (this.isWillDrag(e)) {
+      this.startEvent = e
+      this.startTime = Date.now()
+      e.preventDefault()
+    }
+    window.addEventListener('mouseup', this.up)
   }
 
   public up = (e: MouseEvent) => {
     if (this.isValidClick(e)) {
       const dragId = getClosestDtdNode(e)?.getAttribute(DTD_BASE_KEY) as string
       const targetNode = getNode(dragId)
-      if (targetNode && targetNode.root.dragType !== DragNodeType.COPY) {
-        if (!this.keyboard?.isSelecting()) {
-          this.setSelectedNodes([{ node: targetNode, e }], e)
-        } else {
-          // 存在的不能重复添加
-          this.setSelectedNodes(
-            [...this.selectedNodes, { node: targetNode, e }],
-            e
+      if (
+        targetNode &&
+        targetNode.parent &&
+        targetNode.root.dragType !== DragNodeType.COPY
+      ) {
+        if (e.ctrlKey || e.metaKey) {
+          // 存在的不能重复添加, 已添加的取消选中
+          const index = this.selectedNodes.findIndex(
+            item => item.node.dragId === targetNode.dragId
           )
+          if (index !== -1) {
+            this.selectedNodes.splice(index, 1)
+          } else {
+            this.selectedNodes.push({ node: targetNode, e })
+          }
+        } else {
+          this.setSelectedNodes([{ node: targetNode, e }], e)
         }
       }
-      this.eventCallbacks.get(DragEventType.Click)?.forEach(cb => {
+      this.eventCallbacks.get(MouseEventType.Click)?.forEach(cb => {
         cb(e, targetNode)
       })
     }
+    this.startEvent = null
     this.onDragEnd(e)
-    document.removeEventListener('mousemove', this.move)
-    document.removeEventListener('mouseup', this.up)
+    this.eventCallbacks.get(MouseEventType.Up)?.forEach(cb => {
+      cb(e)
+    })
+    window.removeEventListener('mouseup', this.up)
+  }
+
+  /**
+   * 插入到指定位置
+   * @param targetNode 被插入节点
+   * @param sourceNodes 待插入节点
+   * @param insertBefore
+   * @param type
+   * @param isContainer 目标节点是否是容器
+   */
+  insertNode(
+    targetNode: DtdNode,
+    sourceNodes: DtdNode[],
+    insertBefore: boolean,
+    type: DragNodeType,
+    isContainer: boolean
+  ) {
+    if (!targetNode || !sourceNodes) return
+    if (type === DragNodeType.MOVE) {
+      // 删除原节点
+      deleteNode(sourceNodes)
+    }
+    const parent = isContainer ? targetNode : targetNode.parent || targetNode
+    const insertNodes = sourceNodes.map(node => {
+      node.parent = parent
+      // 如果是copy
+      if (type === DragNodeType.COPY) {
+        node = new DtdNode({ ...node, dragId: '' }, parent)
+      }
+      return node
+    })
+    // update dataTransfer
+    if (type === DragNodeType.COPY) {
+      this.dataTransfer = insertNodes
+    }
+    if (isContainer) {
+      insertBefore
+        ? targetNode.children.unshift(...insertNodes)
+        : targetNode.children.push(...insertNodes)
+    } else {
+      parent.children.splice(
+        parent.children.findIndex(node => targetNode.dragId === node.dragId) +
+          (insertBefore ? 0 : 1),
+        0,
+        ...insertNodes
+      )
+    }
+  }
+
+  deleteSelectedNodes() {
+    this.selectedNodes.forEach(item => {
+      deleteNode(item.node)
+    })
+    this.selectedNodes = []
   }
 }

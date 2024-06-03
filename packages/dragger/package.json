@@ -1,12 +1,12 @@
 {
   "name": "@oragspatl/dragger",
-  "version": "0.1.0",
+  "version": "0.2.2",
   "description": "a draggable library",
-  "types": "dist/dragger.d.ts",
+  "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/es/index.mjs",
-      "require": "./dist/lib/index.js",
+      "require": "./dist/umd/dragger.umd.js",
       "default": "./dist/es/index.mjs"
     }
   },
@@ -14,7 +14,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "vite build && tsc && tsc -p tsconfig.json --declarationDir dist/lib"
+    "build": "vite build && tsc --rootDir src"
   },
   "publishConfig": {
     "access": "public",

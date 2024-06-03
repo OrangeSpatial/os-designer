@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue'
 const ghostRef = ref<HTMLElement>()
 const emits = defineEmits(['mounted'])
 
@@ -9,9 +9,9 @@ onMounted(() => {
 </script>
 
 <template>
-<div ref="ghostRef" class="dtd-ghost">
-  <slot></slot>
-</div>
+  <div ref="ghostRef" class="dtd-ghost">
+    <slot></slot>
+  </div>
 </template>
 
 <style scoped>

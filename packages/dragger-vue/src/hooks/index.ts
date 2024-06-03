@@ -1,3 +1,3 @@
-import { useCursor, keyboard } from './useCursor'
+import { useCursor } from './useCursor'
 
-export { useCursor, keyboard }
+export { useCursor }

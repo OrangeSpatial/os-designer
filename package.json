@@ -6,7 +6,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter @oragspatl-designer/dv-playground dev",
+    "dev": "pnpm --filter @oragspatl/designer dev",
     "postinstall": "simple-git-hooks",
     "commit": "cz",
     "build": "node scripts/build.js",
@@ -23,12 +23,8 @@
     "commit-msg": "npx --no -- commitlint --edit ${1}"
   },
   "lint-staged": {
-    "*.{js,json}": [
-      "prettier --write --ignore-unknown"
-    ],
-    "*.ts?(x)": [
-      "eslint",
-      "prettier --parser=typescript --write"
+    "packages/*/src/**/*.{js,ts,json,css,vue}": [
+      "prettier --write"
     ]
   },
   "keywords": [],

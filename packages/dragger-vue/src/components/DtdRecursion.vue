@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import { DtdNode } from "@oragspatl/dragger";
-import DtdItem from "./DtdItem.vue";
+import { DtdNode } from '@oragspatl/dragger'
+import DtdItem from './DtdItem.vue'
 
 defineOptions({
-  name: "DtdRecursion",
-});
-
+  name: 'DtdRecursion'
+})
+defineSlots<{
+  default: { item: DtdNode }
+}>()
 withDefaults(
   defineProps<{
-    node: DtdNode;
-    nodeClass?: string;
+    node: DtdNode
+    nodeClass?: string
   }>(),
   {}
-);
+)
 </script>
 
 <template>
@@ -25,9 +27,8 @@ withDefaults(
   >
     <slot :item="n"></slot>
     <DtdRecursion :nodeClass v-if="n.children?.length" :node="n">
-      <!-- @ts-ignore is not working 😭-->
-      <template #default="slotValue">
-        <slot :item="slotValue.item"></slot>
+      <template #default="{ item: node }">
+        <slot :item="node"></slot>
       </template>
     </DtdRecursion>
   </dtd-item>
