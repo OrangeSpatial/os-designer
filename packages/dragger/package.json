@@ -6,7 +6,7 @@
   "exports": {
     ".": {
       "import": "./dist/es/index.mjs",
-      "require": "./dist/lib/index.js",
+      "require": "./dist/umd/dragger.umd.js",
       "default": "./dist/es/index.mjs"
     }
   },

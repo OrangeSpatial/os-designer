@@ -18,12 +18,10 @@ export default defineConfig({
           dir: 'dist/es'
         },
         {
-          format: 'cjs',
-          entryFileNames: '[name].js',
-          preserveModules: true,
-          preserveModulesRoot: 'src',
-          exports: 'named',
-          dir: 'dist/lib'
+          format: 'umd',
+          name: 'renderer.umd',
+          entryFileNames: 'renderer.umd.js',
+          dir: 'dist/umd'
         }
       ]
     }
