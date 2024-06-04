@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { inject, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import {
+  inject,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref
+} from 'vue'
 import DtdRecursion from './DtdRecursion.vue'
 import DtdItem from './DtdItem.vue'
 import DtdAuxTool from './DtdAuxTool.vue'
@@ -56,13 +62,16 @@ const dragEndHandle = (e: MouseEvent, targetNode?: DtdNode) => {
   if (!mouse?.dataTransfer.length) return
   if (
     targetNode &&
-    mouse?.dataTransfer.find((node: DtdNode) => node.isParentOf(targetNode))
+    mouse?.dataTransfer.find((node: DtdNode) =>
+      node.isParentOf(targetNode)
+    )
   )
     return
   updateViewData(() => {
     mouse?.setSelectedNodes(
       mouse?.dataTransfer.map(
-        (node: DtdNode) => ({ node: getNode(node.dragId), e }) as ISelectNode
+        (node: DtdNode) =>
+          ({ node: getNode(node.dragId), e }) as ISelectNode
       ),
       e,
       targetNode
@@ -107,15 +116,24 @@ onMounted(() => {
   mouse?.on(MouseEventType.DragEnd, dragEndHandle)
   // 拖拽中，如果拖拽至顶部或底部，左右边缘，自动滚动
   mouse?.on(MouseEventType.Dragging, draggingHandler)
-  mouse?.keyboard?.on(KEYBOARD_EVENTS.delete, deleteSelectedNodes)
+  mouse?.keyboard?.on(
+    KEYBOARD_EVENTS.delete,
+    deleteSelectedNodes
+  )
 })
 onBeforeUnmount(() => {
   if (rootRef.value) {
-    rootRef.value.removeEventListener('scroll', podScrollHandler)
+    rootRef.value.removeEventListener(
+      'scroll',
+      podScrollHandler
+    )
   }
   mouse?.off(MouseEventType.DragEnd, dragEndHandle)
   mouse?.off(MouseEventType.Dragging, draggingHandler)
-  mouse?.keyboard?.off(KEYBOARD_EVENTS.delete, deleteSelectedNodes)
+  mouse?.keyboard?.off(
+    KEYBOARD_EVENTS.delete,
+    deleteSelectedNodes
+  )
   DtdNode.clearCacheAll()
 })
 

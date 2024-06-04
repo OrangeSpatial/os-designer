@@ -78,9 +78,14 @@ const DEFAULT_POSITION = {
   topClientY: 0
 }
 
-const setCursorStyle = (contentWindow: Window, style: string) => {
-  const currentRoot = document?.getElementsByTagName?.('html')?.[0]
-  const root = contentWindow?.document?.getElementsByTagName('html')?.[0]
+const setCursorStyle = (
+  contentWindow: Window,
+  style: string
+) => {
+  const currentRoot =
+    document?.getElementsByTagName?.('html')?.[0]
+  const root =
+    contentWindow?.document?.getElementsByTagName('html')?.[0]
   if (root && root.style.cursor !== style) {
     root.style.cursor = style
   }
@@ -128,12 +133,16 @@ export class Mouse {
     this.selectedNodes = nodes.sort((a, b) => {
       return sortMouseEvents(a.e, b.e)
     })
-    this.eventCallbacks.get(MouseEventType.Select)?.forEach(cb => {
-      cb(e, targetNode)
-    })
+    this.eventCallbacks
+      .get(MouseEventType.Select)
+      ?.forEach(cb => {
+        cb(e, targetNode)
+      })
   }
 
-  public setGhostElement(ghostElement: HTMLElement | null): void {
+  public setGhostElement(
+    ghostElement: HTMLElement | null
+  ): void {
     this.ghostElement && this.ghostElement.remove()
     this.ghostElement = ghostElement
   }
@@ -167,7 +176,10 @@ export class Mouse {
   ) {
     if (!eventType || !callback) return
     if (this.eventCallbacks.has(eventType)) {
-      if (this.eventCallbacks.get(eventType)?.includes(callback)) return
+      if (
+        this.eventCallbacks.get(eventType)?.includes(callback)
+      )
+        return
       this.eventCallbacks.get(eventType)?.push(callback)
     } else {
       this.eventCallbacks.set(eventType, [callback])
@@ -207,7 +219,9 @@ export class Mouse {
     if (
       !this.startEvent ||
       this.startEvent.button === 2 ||
-      ![CursorStatus.Normal, CursorStatus.Dragging].includes(this.dragStatus)
+      ![CursorStatus.Normal, CursorStatus.Dragging].includes(
+        this.dragStatus
+      )
     )
       return false
     const distance = Math.sqrt(
@@ -215,7 +229,9 @@ export class Mouse {
         Math.pow(e.pageY - this.startEvent.pageY, 2)
     )
     const timeDelta = Date.now() - this.startTime
-    return distance > 5 && e !== this.startEvent && timeDelta > 10
+    return (
+      distance > 5 && e !== this.startEvent && timeDelta > 10
+    )
   }
 
   onDragStart(e: MouseEvent) {
@@ -243,15 +259,23 @@ export class Mouse {
     }
     if (node) {
       // 如果node在选中的节点里面，携带选中的所有节点
-      if (this.selectedNodes.find(item => item.node.dragId === node.dragId)) {
-        this.dataTransfer = this.selectedNodes.map(item => item.node)
+      if (
+        this.selectedNodes.find(
+          item => item.node.dragId === node.dragId
+        )
+      ) {
+        this.dataTransfer = this.selectedNodes.map(
+          item => item.node
+        )
       } else if (!this.dataTransfer.includes(node)) {
         this.dataTransfer = [node]
         this.setSelectedNodes([], e)
       }
-      this.eventCallbacks.get(MouseEventType.DragStart)?.forEach(cb => {
-        cb(e, node)
-      })
+      this.eventCallbacks
+        .get(MouseEventType.DragStart)
+        ?.forEach(cb => {
+          cb(e, node)
+        })
     }
   }
 
@@ -267,9 +291,11 @@ export class Mouse {
     const target = getClosestDtdNode(e) as HTMLElement
     const dragId = target?.getAttribute(DTD_BASE_KEY) as string
     const targetNode = getNode(dragId)
-    this.eventCallbacks.get(MouseEventType.Dragging)?.forEach(cb => {
-      cb(e, targetNode)
-    })
+    this.eventCallbacks
+      .get(MouseEventType.Dragging)
+      ?.forEach(cb => {
+        cb(e, targetNode)
+      })
   }
 
   onDragEnd(e: MouseEvent) {
@@ -284,11 +310,15 @@ export class Mouse {
       clientY: e.clientY
     })
     // 事件
-    this.eventCallbacks.get(MouseEventType.DragEnd)?.forEach(cb => {
-      const dragId = getClosestDtdNode(e)?.getAttribute(DTD_BASE_KEY) as string
-      const targetNode = getNode(dragId)
-      cb(e, targetNode)
-    })
+    this.eventCallbacks
+      .get(MouseEventType.DragEnd)
+      ?.forEach(cb => {
+        const dragId = getClosestDtdNode(e)?.getAttribute(
+          DTD_BASE_KEY
+        ) as string
+        const targetNode = getNode(dragId)
+        cb(e, targetNode)
+      })
     // 移除拖拽元素
     if (this.dragElement) {
       this.dragElement = null
@@ -304,15 +334,19 @@ export class Mouse {
       this.onDragStart(e)
       this.onDragMove(e)
     }
-    this.eventCallbacks.get(MouseEventType.Move)?.forEach(cb => {
-      cb(e)
-    })
+    this.eventCallbacks
+      .get(MouseEventType.Move)
+      ?.forEach(cb => {
+        cb(e)
+      })
   }
 
   public down = (e: MouseEvent) => {
-    this.eventCallbacks.get(MouseEventType.Down)?.forEach(cb => {
-      cb(e)
-    })
+    this.eventCallbacks
+      .get(MouseEventType.Down)
+      ?.forEach(cb => {
+        cb(e)
+      })
     if (this.isWillDrag(e)) {
       this.startEvent = e
       this.startTime = Date.now()
@@ -323,7 +357,9 @@ export class Mouse {
 
   public up = (e: MouseEvent) => {
     if (this.isValidClick(e)) {
-      const dragId = getClosestDtdNode(e)?.getAttribute(DTD_BASE_KEY) as string
+      const dragId = getClosestDtdNode(e)?.getAttribute(
+        DTD_BASE_KEY
+      ) as string
       const targetNode = getNode(dragId)
       if (
         targetNode &&
@@ -343,10 +379,14 @@ export class Mouse {
         } else {
           this.setSelectedNodes([{ node: targetNode, e }], e)
         }
+      } else if (!targetNode?.parent) {
+        this.setSelectedNodes([], e)
       }
-      this.eventCallbacks.get(MouseEventType.Click)?.forEach(cb => {
-        cb(e, targetNode)
-      })
+      this.eventCallbacks
+        .get(MouseEventType.Click)
+        ?.forEach(cb => {
+          cb(e, targetNode)
+        })
     }
     this.startEvent = null
     this.onDragEnd(e)
@@ -376,7 +416,9 @@ export class Mouse {
       // 删除原节点
       deleteNode(sourceNodes)
     }
-    const parent = isContainer ? targetNode : targetNode.parent || targetNode
+    const parent = isContainer
+      ? targetNode
+      : targetNode.parent || targetNode
     const insertNodes = sourceNodes.map(node => {
       node.parent = parent
       // 如果是copy
@@ -395,8 +437,9 @@ export class Mouse {
         : targetNode.children.push(...insertNodes)
     } else {
       parent.children.splice(
-        parent.children.findIndex(node => targetNode.dragId === node.dragId) +
-          (insertBefore ? 0 : 1),
+        parent.children.findIndex(
+          node => targetNode.dragId === node.dragId
+        ) + (insertBefore ? 0 : 1),
         0,
         ...insertNodes
       )

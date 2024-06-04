@@ -3,8 +3,7 @@
         <dtd-pod class="dtd-root">
             <DesignerExplorer>
                 <os-tabs :options="tabOptions" v-model="activeTabName" />
-                <os-assets v-show="activeTabName === 'Assets'" :assets="assets" />
-                <os-layers v-show="activeTabName === 'Layers'" />
+                <left-side :activeName="activeTabName" :assets />
                 <drag-bar position="end" direction="vertical" :range="[100, 500]"></drag-bar>
             </DesignerExplorer>
             <DesignerWorkspace>
@@ -33,8 +32,7 @@ import { ref, watchEffect } from "vue";
 import NodeRender from "../render/Index.vue";
 import { registerComponents } from "@oragspatl/renderer";
 import { antvComponents } from "../../plugins/antv";
-import OsAssets from "./assets/Index.vue";
-import OsLayers from "./layers/Index.vue";
+import LeftSide from "./explorer/LeftSide.vue";
 import OsTabs from "./explorer/Tabs.vue";
 
 const props = defineProps<{
@@ -80,20 +78,6 @@ const activeTabName = ref('Assets')
 
             .dtd-render-container {
                 background-color: #fff;
-            }
-        }
-
-        .dtd-item {
-            padding: 4px;
-            background-color: white;
-        }
-
-        .copy-item {
-            border-radius: 4px;
-
-            &:hover {
-                background-color: var(--os-primary-color);
-                color: white;
             }
         }
 

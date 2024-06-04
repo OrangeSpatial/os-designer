@@ -28,5 +28,6 @@
 
     --os-toolbar-width: 48px;
     --os-header-height: 48px;
-    --os-operation-sidebar-width: 220px;
+    --os-side-header-height: 40px;
+    --os-operation-sidebar-width: 240px;
 }
