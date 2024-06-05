@@ -9,17 +9,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, inject, computed } from "vue";
+import { ref, inject, computed, Ref } from "vue";
 import { genCls } from "@oragspatl/dragger-vue";
 import OsTabs from "./Tabs.vue";
 import { SelectedNodesSymbol } from "../../../common/injectSymbol";
+import { ISelectNode } from "../../../types/node";
 
 const tabOptions = ref(['属性', '事件'])
 const activeTabName = ref('属性')
 
 const currentNode = computed(() => selectedNodes.value[0]?.node || {})
 
-const selectedNodes = inject<DtdNode[]>(SelectedNodesSymbol, [])
+const selectedNodes = inject<Ref<ISelectNode[]>>(SelectedNodesSymbol, ref([]))
 </script>
 
 <style lang="scss">
