@@ -31,7 +31,9 @@ export enum MouseEventType {
   DragStart = 'dragstart',
   Dragging = 'dragging',
   DragEnd = 'dragend',
+
   Select = 'select',
+  SelectChange = 'selectChange',
 
   Click = 'click',
   Move = 'move',
@@ -111,10 +113,7 @@ export class Mouse {
   startEvent: MouseEvent | null = null
   startTime: number = 0
 
-  eventCallbacks = new Map<
-    string,
-    ((e: MouseEvent, targetNode?: DtdNode) => void)[]
-  >()
+  eventCallbacks = new Map<string, Function[]>()
 
   selectedNodes: ISelectNode[] = []
 
@@ -130,9 +129,25 @@ export class Mouse {
     targetNode?: DtdNode
   ): void {
     if (!nodes || !Array.isArray(nodes)) return
-    this.selectedNodes = nodes.sort((a, b) => {
+    const selectedNodes = nodes.sort((a, b) => {
       return sortMouseEvents(a.e, b.e)
     })
+    if (
+      selectedNodes.map(item => item.node.dragId).join(',') !==
+        this.selectedNodes
+          .map(item => item.node.dragId)
+          .join(',') ||
+      (selectedNodes.length === 0 &&
+        this.dragStatus === CursorStatus.Dragging)
+    ) {
+      console.log('selectedNodes', selectedNodes)
+      this.eventCallbacks
+        .get(MouseEventType.SelectChange)
+        ?.forEach(cb => {
+          cb(selectedNodes)
+        })
+    }
+    this.selectedNodes = selectedNodes
     this.eventCallbacks
       .get(MouseEventType.Select)
       ?.forEach(cb => {
@@ -170,10 +185,7 @@ export class Mouse {
     }
   }
 
-  on(
-    eventType: MouseEventType,
-    callback: (e: MouseEvent, targetNode?: DtdNode) => void
-  ) {
+  on(eventType: MouseEventType, callback: Function) {
     if (!eventType || !callback) return
     if (this.eventCallbacks.has(eventType)) {
       if (
@@ -186,10 +198,7 @@ export class Mouse {
     }
   }
 
-  off(
-    eventType: MouseEventType,
-    callback: (e: MouseEvent, targetNode: DtdNode) => void
-  ) {
+  off(eventType: MouseEventType, callback: Function) {
     if (!eventType || !callback) return
     if (this.eventCallbacks.has(eventType)) {
       const callbacks = this.eventCallbacks.get(eventType)
@@ -376,6 +385,11 @@ export class Mouse {
           } else {
             this.selectedNodes.push({ node: targetNode, e })
           }
+          this.setSelectedNodes(
+            this.selectedNodes,
+            e,
+            targetNode
+          )
         } else {
           this.setSelectedNodes([{ node: targetNode, e }], e)
         }
@@ -391,6 +405,7 @@ export class Mouse {
     this.startEvent = null
     this.onDragEnd(e)
     this.eventCallbacks.get(MouseEventType.Up)?.forEach(cb => {
+      console.log('upppp', this.selectedNodes)
       cb(e)
     })
     window.removeEventListener('mouseup', this.up)

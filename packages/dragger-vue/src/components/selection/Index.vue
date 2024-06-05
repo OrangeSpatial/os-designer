@@ -82,34 +82,48 @@ function updateSelection(e?: MouseEvent, targetNode?: DtdNode) {
   const container = props.parentEl?.parentElement
   if (!container) return
   // 容器偏移量
-  const { x: offsetX, y: offsetY } = container.getBoundingClientRect()
+  const { x: offsetX, y: offsetY } =
+    container.getBoundingClientRect()
   // 节点对应的dom
   let selectedDoms: (Element | null)[]
 
   if (targetNode && positionObj) {
     // 拖拽
     // 选中拖拽节点
-    const isContainerEdge = cursorAtContainerEdge(positionObj.rect, e)
+    const isContainerEdge = cursorAtContainerEdge(
+      positionObj.rect,
+      e
+    )
     // 获取所有拖拽节点对应的dom
     // 如果是放入容器，在容器内计算最大矩形
     if (targetNode?.droppable && !isContainerEdge) {
       // 在可放置的容器内
       selectedDoms = selectNodes.value.map(item => {
-        return getElementByDtdId(item.selectNode.dragId, positionObj.targetEl)
+        return getElementByDtdId(
+          item.selectNode.dragId,
+          positionObj.targetEl
+        )
       })
     } else {
       // 如果不是放入容器，计算所有拖拽节点父级dom的最大矩形
-      const parentDtdDom = positionObj.targetEl.parentElement?.closest(
-        `[${DTD_BASE_KEY}]`
-      ) as HTMLElement
+      const parentDtdDom =
+        positionObj.targetEl.parentElement?.closest(
+          `[${DTD_BASE_KEY}]`
+        ) as HTMLElement
       if (!parentDtdDom) return
       selectedDoms = selectNodes.value.map(item => {
-        return getElementByDtdId(item.selectNode.dragId, parentDtdDom)
+        return getElementByDtdId(
+          item.selectNode.dragId,
+          parentDtdDom
+        )
       })
     }
   } else {
     selectedDoms = selectNodes.value.map(item => {
-      return getElementByDtdId(item.selectNode.dragId, container)
+      return getElementByDtdId(
+        item.selectNode.dragId,
+        container
+      )
     })
   }
   // 计算所有拖拽节点对应的dom的最大矩形
@@ -117,8 +131,10 @@ function updateSelection(e?: MouseEvent, targetNode?: DtdNode) {
   selectedDoms.map((dom, index) => {
     const rect = dom?.getBoundingClientRect()
     if (!rect) return
-    const left = rect.left - offsetX - props.scrollPosition.scrollLeft
-    const top = rect.top - offsetY - props.scrollPosition.scrollTop
+    const left =
+      rect.left - offsetX - props.scrollPosition.scrollLeft
+    const top =
+      rect.top - offsetY - props.scrollPosition.scrollTop
     const width = rect.width
     const height = rect.height
     selectNodes.value[index].startLeft = left
@@ -138,8 +154,10 @@ function resetSelectionRectStyle() {
 
 function updateSelectionRectStyle() {
   selectNodes.value.map(item => {
-    const dx = props.scrollPosition.scrollLeft - item.startPosition.x
-    const dy = props.scrollPosition.scrollTop - item.startPosition.y
+    const dx =
+      props.scrollPosition.scrollLeft - item.startPosition.x
+    const dy =
+      props.scrollPosition.scrollTop - item.startPosition.y
     const left = item.startLeft - dx
     const top = item.startTop - dy
     item.selectionStyle = {
@@ -179,7 +197,8 @@ defineExpose({
     <slot
       v-if="selectNodes.length === 1"
       :item="{
-        selectionStyleTransform: item.selectionStyle.transform as string,
+        selectionStyleTransform: item.selectionStyle
+          .transform as string,
         selectNode: item.selectNode
       }"
     />

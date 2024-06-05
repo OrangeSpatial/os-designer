@@ -1,10 +1,25 @@
 <template>
+    <os-tabs :options="tabOptions" v-model="activeTabName" />
     <div :class="genCls('designer-right-side')">
+        <div>{{ currentNode.props?.componentName }}</div>
+        <div v-for="item in currentNode.props?.configure.props || []" :key="item.name">
+            <div>{{ item.title }}: {{ item.name }}</div>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import { ref, inject, computed } from "vue";
 import { genCls } from "@oragspatl/dragger-vue";
+import OsTabs from "./Tabs.vue";
+import { SelectedNodesSymbol } from "../../../common/injectSymbol";
+
+const tabOptions = ref(['属性', '事件'])
+const activeTabName = ref('属性')
+
+const currentNode = computed(() => selectedNodes.value[0]?.node || {})
+
+const selectedNodes = inject<DtdNode[]>(SelectedNodesSymbol, [])
 </script>
 
 <style lang="scss">

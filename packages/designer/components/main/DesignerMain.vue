@@ -1,9 +1,8 @@
 <template>
     <div :class="genCls('designer-main')">
-        <dtd-pod class="dtd-root">
+        <dtd-pod class="dtd-root" @selected="onSelected">
             <DesignerExplorer>
-                <os-tabs :options="tabOptions" v-model="activeTabName" />
-                <left-side :activeName="activeTabName" :assets />
+                <left-side :assets />
                 <drag-bar position="end" direction="vertical" :range="[100, 500]"></drag-bar>
             </DesignerExplorer>
             <DesignerWorkspace>
@@ -15,7 +14,7 @@
             </DesignerWorkspace>
             <DesignerExplorer>
                 <drag-bar position="start" direction="vertical" :range="[100, 500]"></drag-bar>
-                right
+                <right-side></right-side>
             </DesignerExplorer>
             <template #ghost="{ items }">
                 <div class="ghost-class">{{ items?.[0].componentName }}</div>
@@ -25,15 +24,16 @@
 </template>
 
 <script setup lang="ts">
-import { genCls, DragBar } from "@oragspatl/dragger-vue";
+import { genCls, DragBar, DtdNode } from "@oragspatl/dragger-vue";
 import DesignerExplorer from "./explorer/Index.vue";
 import DesignerWorkspace from "./workspace/Index.vue";
-import { ref, watchEffect } from "vue";
+import { provide, ref, watchEffect } from "vue";
 import NodeRender from "../render/Index.vue";
 import { registerComponents } from "@oragspatl/renderer";
 import { antvComponents } from "../../plugins/antv";
 import LeftSide from "./explorer/LeftSide.vue";
-import OsTabs from "./explorer/Tabs.vue";
+import RightSide from "./explorer/RightSide.vue";
+import { SelectedNodesSymbol } from "../../common/injectSymbol";
 
 const props = defineProps<{
     assets: any[]
@@ -47,11 +47,15 @@ watchEffect(() => {
     registerComponents(components)
 })
 
-const data = ref([])
+const data = ref<DtdNode[]>([])
 
-const tabOptions = ref(['Assets', 'Layers'])
-const activeTabName = ref('Assets')
+const selectedNodes = ref<DtdNode[]>([])
 
+function onSelected(nodes: DtdNode[]) {
+    selectedNodes.value = nodes
+}
+
+provide(SelectedNodesSymbol, selectedNodes)
 </script>
 
 <style lang="scss">
