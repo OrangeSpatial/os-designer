@@ -20,6 +20,7 @@ import {
 } from '@oragspatl/dragger'
 import { cursorAtContainerEdgeType } from '@oragspatl/dragger'
 import { DTD_MOUSE } from '../common/injectSymbol'
+import { treePreProcess } from '../common/treePreProcess'
 
 defineOptions({
   name: 'DragToDrop'
@@ -138,7 +139,9 @@ onBeforeUnmount(() => {
 })
 
 function init() {
-  const root = DtdNode.fromList(props.data || [])
+  const root = DtdNode.fromList(
+    treePreProcess(props.data) || []
+  )
   root.dragType = props.dragType
   dtdData.value = root
 }

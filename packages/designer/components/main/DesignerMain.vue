@@ -3,7 +3,7 @@
         <dtd-pod class="dtd-root" @selected="onSelected">
             <DesignerExplorer>
                 <left-side :assets />
-                <drag-bar position="end" direction="vertical" :range="[100, 500]"></drag-bar>
+                <drag-bar position="end" direction="vertical" :range="[240, 500]"></drag-bar>
             </DesignerExplorer>
             <DesignerWorkspace>
                 <DragToDrop class="dtd-render-container" nodeClass="dtd-render-node-class" :data="data">
@@ -13,7 +13,7 @@
                 </DragToDrop>
             </DesignerWorkspace>
             <DesignerExplorer>
-                <drag-bar position="start" direction="vertical" :range="[100, 500]"></drag-bar>
+                <drag-bar position="start" direction="vertical" :range="[240, 500]"></drag-bar>
                 <right-side></right-side>
             </DesignerExplorer>
             <template #ghost="{ items }">

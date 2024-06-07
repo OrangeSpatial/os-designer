@@ -30,7 +30,6 @@ const activeTabName = computed({
 
 .#{$prefix} {
     &-tabs {
-        width: 100%;
         border-bottom: 1px solid var(--os-operation-border-color);
         display: flex;
         font-size: 12px;

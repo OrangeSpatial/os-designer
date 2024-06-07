@@ -1,6 +1,6 @@
 <template>
-    <os-tabs :options="tabOptions" v-model="activeTabName" />
     <div :class="genCls('designer-right-side')">
+        <os-tabs :options="tabOptions" v-model="activeTabName" />
         <div>{{ currentNode.props?.componentName }}</div>
         <div v-for="item in currentNode.props?.configure.props || []" :key="item.name">
             <div>{{ item.title }}: {{ item.name }}</div>
@@ -27,8 +27,8 @@ const selectedNodes = inject<Ref<ISelectNode[]>>(SelectedNodesSymbol, ref([]))
 @use "../../../styles/variables" as *;
 
 .#{$prefix} {
-    &-designer-left-side {
-        height: calc(100% - var(--os-side-header-height, 40px));
+    &-designer-right-side {
+        height: 100%;
     }
 }
 </style>
