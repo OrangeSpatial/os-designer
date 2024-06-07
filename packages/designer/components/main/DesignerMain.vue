@@ -1,13 +1,9 @@
 <template>
     <div :class="genCls('designer-main')">
-        <dtd-pod class="dtd-root">
+        <dtd-pod class="dtd-root" @selected="onSelected">
             <DesignerExplorer>
-                <DragToDrop drag-type="copy" class="dtd-copy-nodes" :data="assets">
-                    <template #default="{ item }">
-                        <div class="dtd-item copy-item">{{ item.props?.componentName }}</div>
-                    </template>
-                </DragToDrop>
-                <drag-bar position="end" direction="vertical" :range="[100, 500]"></drag-bar>
+                <left-side :assets />
+                <drag-bar position="end" direction="vertical" :range="[240, 500]"></drag-bar>
             </DesignerExplorer>
             <DesignerWorkspace>
                 <DragToDrop class="dtd-render-container" nodeClass="dtd-render-node-class" :data="data">
@@ -17,8 +13,8 @@
                 </DragToDrop>
             </DesignerWorkspace>
             <DesignerExplorer>
-                <drag-bar position="start" direction="vertical" :range="[100, 500]"></drag-bar>
-                right
+                <drag-bar position="start" direction="vertical" :range="[240, 500]"></drag-bar>
+                <right-side></right-side>
             </DesignerExplorer>
             <template #ghost="{ items }">
                 <div class="ghost-class">{{ items?.[0].componentName }}</div>
@@ -28,13 +24,16 @@
 </template>
 
 <script setup lang="ts">
-import { genCls, DragBar } from "@oragspatl/dragger-vue";
+import { genCls, DragBar, DtdNode } from "@oragspatl/dragger-vue";
 import DesignerExplorer from "./explorer/Index.vue";
 import DesignerWorkspace from "./workspace/Index.vue";
-import { ref, watchEffect } from "vue";
+import { provide, ref, watchEffect } from "vue";
 import NodeRender from "../render/Index.vue";
 import { registerComponents } from "@oragspatl/renderer";
-import { elComponents } from "../../plugins/elementPlus";
+import { antvComponents } from "../../plugins/antv";
+import LeftSide from "./explorer/LeftSide.vue";
+import RightSide from "./explorer/RightSide.vue";
+import { SelectedNodesSymbol } from "../../common/injectSymbol";
 
 const props = defineProps<{
     assets: any[]
@@ -42,13 +41,21 @@ const props = defineProps<{
 
 watchEffect(() => {
     const components = props.assets.reduce((acc, cur) => {
-        acc[cur.componentName] = elComponents[cur.componentName]
+        acc[cur.componentName] = antvComponents[cur.componentName]
         return acc
     }, {})
     registerComponents(components)
 })
 
-const data = ref([])
+const data = ref<DtdNode[]>([])
+
+const selectedNodes = ref<DtdNode[]>([])
+
+function onSelected(nodes: DtdNode[]) {
+    selectedNodes.value = nodes
+}
+
+provide(SelectedNodesSymbol, selectedNodes)
 </script>
 
 <style lang="scss">
@@ -56,7 +63,6 @@ const data = ref([])
 
 .#{$prefix} {
     &-designer-main {
-        color: var(--os-operation-color);
         height: calc(100% - var(--os-header-height));
 
         .dtd-root {
@@ -76,20 +82,6 @@ const data = ref([])
 
             .dtd-render-container {
                 background-color: #fff;
-            }
-        }
-
-        .dtd-item {
-            padding: 4px;
-            background-color: white;
-        }
-
-        .copy-item {
-            border-radius: 4px;
-
-            &:hover {
-                background-color: var(--os-primary-color);
-                color: white;
             }
         }
 

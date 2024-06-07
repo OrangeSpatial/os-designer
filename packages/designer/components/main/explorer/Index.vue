@@ -16,7 +16,6 @@ import { genCls } from "@oragspatl/dragger-vue";
         position: relative;
         background-color: var(--os-operation-bg-color);
         width: var(--os-operation-sidebar-width);
-        padding: 10px;
     }
 }
 </style>

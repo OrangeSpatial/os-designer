@@ -1,12 +1,12 @@
 [
   {
     "id": "dfgh25g556df",
-    "componentName": "ElInput",
+    "componentName": "Input",
     "category": "表单",
     "group": "基础组件",
     "title": "输入框",
     "schema": {
-      "componentName": "ElInput",
+      "componentName": "Input",
       "props": {
         "placeholder": "请输入"
       }
@@ -232,12 +232,12 @@
   },
   {
     "id": "tgfh4665474yjr",
-    "componentName": "ElRadio",
+    "componentName": "Radio",
     "category": "表单",
     "group": "基础组件",
     "title": "单选框",
     "schema": {
-      "componentName": "ElRadio",
+      "componentName": "Radio",
       "props": {}
     },
     "configure": {
@@ -326,12 +326,12 @@
   },
   {
     "id": "dfgh255sjdfh56df",
-    "componentName": "ElCheckbox",
+    "componentName": "Checkbox",
     "category": "表单",
     "group": "基础组件",
     "title": "多选框",
     "schema": {
-      "componentName": "ElCheckbox",
+      "componentName": "Checkbox",
       "props": {}
     },
     "configure": {
@@ -415,12 +415,12 @@
   },
   {
     "id": "dfgh2rt5556df",
-    "componentName": "ElSelect",
+    "componentName": "Select",
     "category": "表单",
     "group": "基础组件",
     "title": "选择器",
     "schema": {
-      "componentName": "ElSelect",
+      "componentName": "Select",
       "props": {
         "placeholder": "请选择"
       }
@@ -592,7 +592,7 @@
           "name": "popperClass",
           "type": "String",
           "title": "弹出类",
-          "description": "ElSelect 下拉框的类名",
+          "description": "Select 下拉框的类名",
           "x-defaultValue": "",
           "setter": "InputSetter"
         },
@@ -631,7 +631,7 @@
         {
           "name": "prefix",
           "title": "前缀",
-          "description": "ElSelect 组件头部内容"
+          "description": "Select 组件头部内容"
         },
         {
           "name": "header",
@@ -721,6 +721,315 @@
               "description": "原生事件对象"
             }
           ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "dfgh2gthrt5556df",
+    "componentName": "Card",
+    "category": "容器",
+    "group": "基础容器",
+    "title": "卡片",
+    "schema": {
+      "componentName": "Card",
+      "props": {},
+      "children": [
+        {
+          "componentName": "div",
+          "props": {
+            "content": ""
+          },
+          "children": "这是一行文字内容"
+        }
+      ]
+    },
+    "configure": {
+      "props": [
+        {
+          "name": "bordered",
+          "type": "Boolean",
+          "title": "边框",
+          "description": "是否有边框",
+          "x-defaultValue": true,
+          "setter": "SwitchSetter"
+        },
+        {
+          "name": "hoverable",
+          "type": "Boolean",
+          "title": "悬停",
+          "description": "鼠标移过时可浮起",
+          "x-defaultValue": false,
+          "setter": "SwitchSetter"
+        },
+        {
+          "name": "size",
+          "type": "String",
+          "title": "尺寸",
+          "description": "卡片尺寸",
+          "x-defaultValue": "",
+          "setter": {
+            "name": "SelectSetter",
+            "props": {
+              "options": [
+                {
+                  "value": "",
+                  "label": "默认"
+                },
+                {
+                  "value": "small",
+                  "label": "小"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "title",
+          "type": "String",
+          "title": "标题",
+          "description": "卡片标题",
+          "x-defaultValue": "",
+          "setter": "InputSetter"
+        },
+        {
+          "name": "extra",
+          "type": "String",
+          "title": "额外",
+          "description": "卡片额外内容",
+          "x-defaultValue": "",
+          "setter": "InputSetter"
+        },
+        {
+          "name": "headStyle",
+          "type": "Object",
+          "title": "头部样式",
+          "description": "卡片头部样式",
+          "setter": "StyleSetter"
+        }
+      ],
+      "slots": [
+        {
+          "name": "default",
+          "title": "默认",
+          "description": "卡片内容"
+        },
+        {
+          "name": "title",
+          "title": "标题",
+          "description": "卡片标题"
+        },
+        {
+          "name": "extra",
+          "title": "额外",
+          "description": "卡片额外内容"
+        }
+      ]
+    }
+  },
+  {
+    "id": "dfgh2gthrt5556dr",
+    "componentName": "Button",
+    "category": "功能",
+    "group": "基础组件",
+    "title": "按钮",
+    "schema": {
+      "componentName": "Button",
+      "props": {
+      },
+      "children": "按钮"
+    },
+    "configure": {
+      "props": [
+        {
+          "name": "type",
+          "type": "String",
+          "title": "类型",
+          "description": "按钮类型",
+          "x-defaultValue": "default",
+          "setter": {
+            "name": "SelectSetter",
+            "props": {
+              "options": [
+                {
+                  "value": "default",
+                  "label": "默认"
+                },
+                {
+                  "value": "primary",
+                  "label": "主要"
+                },
+                {
+                  "value": "success",
+                  "label": "成功"
+                },
+                {
+                  "value": "warning",
+                  "label": "警告"
+                },
+                {
+                  "value": "danger",
+                  "label": "危险"
+                },
+                {
+                  "value": "text",
+                  "label": "文本"
+                },
+                {
+                  "value": "info",
+                  "label": "信息"
+                },
+                {
+                  "value": "link",
+                  "label": "链接"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "size",
+          "type": "String",
+          "title": "尺寸",
+          "description": "按钮尺寸",
+          "x-defaultValue": "default",
+          "setter": {
+            "name": "SelectSetter",
+            "props": {
+              "options": [
+                {
+                  "value": "default",
+                  "label": "默认"
+                },
+                {
+                  "value": "small",
+                  "label": "小"
+                },
+                {
+                  "value": "mini",
+                  "label": "迷你"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "icon",
+          "type": "String",
+          "title": "图标",
+          "description": "按钮图标",
+          "x-defaultValue": "",
+          "setter": "InputSetter"
+        },
+        {
+          "name": "loading",
+          "type": "Boolean",
+          "title": "加载",
+          "description": "是否加载中状态",
+          "x-defaultValue": false,
+          "setter": "SwitchSetter"
+        },
+        {
+          "name": "disabled",
+          "type": "Boolean",
+          "title": "禁用",
+          "description": "是否禁用",
+          "x-defaultValue": false,
+          "setter": "SwitchSetter"
+        },
+        {
+          "name": "plain",
+          "type": "Boolean",
+          "title": "朴素",
+          "description": "是否朴素按钮",
+          "x-defaultValue": false,
+          "setter": "SwitchSetter"
+        },
+        {
+          "name": "round",
+          "type": "Boolean",
+          "title": "圆角",
+          "description": "是否圆角按钮",
+          "x-defaultValue": false,
+          "setter": "SwitchSetter"
+        },
+        {
+          "name": "circle",
+          "type": "Boolean",
+          "title": "圆形",
+          "description": "是否圆形按钮",
+          "x-defaultValue": false,
+          "setter": "SwitchSetter"
+        },
+        {
+          "name": "text",
+          "type": "String",
+          "title": "文本",
+          "description": "按钮文本",
+          "x-defaultValue": "按钮",
+          "setter": "InputSetter"
+        },
+        {
+          "name": "href",
+          "type": "String",
+          "title": "链接",
+          "description": "点击跳转的链接",
+          "x-defaultValue": "",
+          "setter": "InputSetter"
+        }
+      ],
+      "events": [
+        {
+          "name": "click",
+          "title": "点击",
+          "description": "点击按钮时触发",
+          "arguments": [
+            {
+              "name": "event",
+              "type": "Event",
+              "description": "原生事件对象"
+            }
+          ]
+        }
+      ],
+      "slots": [
+        {
+          "name": "default",
+          "title": "默认",
+          "description": "按钮内容"
+        }
+      ]
+    }
+  },
+  {
+    "id": "dfgh2g56thrt5556dr",
+    "componentName": "div",
+    "category": "功能",
+    "group": "基础组件",
+    "title": "按钮",
+    "schema": {
+      "componentName": "div",
+      "props": {
+      },
+      "children": "这是一行文字内容"
+    },
+    "configure": {
+      "props": [
+        {
+          "name": "content",
+          "type": "String",
+          "title": "内容",
+          "description": "内容",
+          "x-defaultValue": "这是一行文字内容",
+          "setter": "InputSetter"
+        }
+      ],
+      "events": [],
+      "slots": [
+        {
+          "name": "default",
+          "title": "默认",
+          "description": "默认插槽"
         }
       ]
     }

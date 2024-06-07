@@ -2,9 +2,7 @@
   <div
     class="dtd-aux-helpers"
     :class="[isTouchedTop ? 'bottom-left' : 'top-left']"
-  >
-    {{ node.selectNode?.dragId }}
-  </div>
+  ></div>
   <div
     class="dtd-aux-helpers"
     :class="[isTouchedTop ? 'bottom-right' : 'top-right']"

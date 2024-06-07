@@ -12,14 +12,14 @@ import DesignerMain from "./main/DesignerMain.vue";
 import "../styles/index"
 import assets from '../data/assets.json'
 import { provide, ref } from "vue";
-import { AssetsKeyById } from "../common/injectSymbol";
+import { AssetsKeyByIdSymbol } from "../common/injectSymbol";
 
 const assetsKeyById = assets.reduce((acc, asset) => {
     acc[asset.id] = asset;
     return acc;
 }, {});
 
-provide(AssetsKeyById, assetsKeyById);
+provide(AssetsKeyByIdSymbol, assetsKeyById);
 
 const assetList = ref(assets);
 

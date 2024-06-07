@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
   DtdNode,
+  ISelectNode,
   NodeLayout,
   MouseEventType,
   DragNodeType,
@@ -29,16 +30,27 @@ function dragEndHandler(e: MouseEvent, targetNode?: DtdNode) {
   const sourceNode = mouse.dataTransfer
   const positionObj = getCursorPositionInDtdNode(e)
   carryNode.value = []
-  if (!targetNode || !sourceNode.length || !positionObj || !mouse.dragElement)
+  if (
+    !targetNode ||
+    !sourceNode.length ||
+    !positionObj ||
+    !mouse.dragElement
+  )
     return
-  const parentNode = sourceNode.find(node => node.isParentOf(targetNode))
+  const parentNode = sourceNode.find(node =>
+    node.isParentOf(targetNode)
+  )
   if (parentNode) return
   // COPY组 拖拽不允许插入到容器内
   if (targetNode.root.dragType === DragNodeType.COPY) return
   const dragType = sourceNode[0].root.dragType
-  const isContainerEdge = cursorAtContainerEdge(positionObj.rect, e)
+  const isContainerEdge = cursorAtContainerEdge(
+    positionObj.rect,
+    e
+  )
   const isVertical =
-    getLayoutNodeInContainer(positionObj.targetEl) === NodeLayout.VERTICAL
+    getLayoutNodeInContainer(positionObj.targetEl) ===
+    NodeLayout.VERTICAL
   const insertBefore = isVertical
     ? positionObj.insertBefore
     : positionObj.isLeft
@@ -57,8 +69,8 @@ function ghostMounted(el: HTMLElement) {
   mouse.setGhostElement(el)
 }
 
-function selectHandler() {
-  emits('selected', mouse.selectedNodes[0]?.node?.props)
+function selectHandler(selectedNodes: ISelectNode[]) {
+  emits('selected', selectedNodes)
 }
 
 function dragStartHandler() {
@@ -69,13 +81,13 @@ onMounted(() => {
   if (podRef.value) {
     mouse.setPodElement(podRef.value)
   }
-  mouse.on(MouseEventType.Select, selectHandler)
+  mouse.on(MouseEventType.SelectChange, selectHandler)
   mouse.on(MouseEventType.DragStart, dragStartHandler)
   mouse.on(MouseEventType.DragEnd, dragEndHandler)
 })
 
 onBeforeUnmount(() => {
-  mouse.off(MouseEventType.Select, selectHandler)
+  mouse.off(MouseEventType.SelectChange, selectHandler)
   mouse.off(MouseEventType.DragStart, dragStartHandler)
   mouse.off(MouseEventType.DragEnd, dragEndHandler)
 })
