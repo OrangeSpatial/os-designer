@@ -1,6 +1,7 @@
 <script lang="ts">
-import { schemaRender, registerComponents } from "@oragspatl/renderer";
-import { defineComponent } from "vue";
+import { schemaRender } from "@oragspatl/renderer";
+import { defineComponent, h } from "vue";
+import { dtdNodesToDNodes, renderDtdNode, renderDtdNodes } from "./render";
 
 export default defineComponent({
     name: 'NodeRender',
@@ -12,7 +13,8 @@ export default defineComponent({
     },
     setup(props: { schema: any }) {
         return () => {
-            return schemaRender(props.schema)
+            console.log('NodeRender', props.schema)
+            return renderDtdNodes(props.schema.children)
         }
     }
 })

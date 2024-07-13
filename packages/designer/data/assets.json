@@ -1006,7 +1006,7 @@
     "componentName": "div",
     "category": "功能",
     "group": "基础组件",
-    "title": "按钮",
+    "title": "文本",
     "schema": {
       "componentName": "div",
       "props": {

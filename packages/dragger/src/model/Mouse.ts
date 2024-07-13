@@ -440,6 +440,7 @@ export class Mouse {
       if (type === DragNodeType.COPY) {
         node = new DtdNode({ ...node, dragId: '' }, parent)
       }
+      // 存在插槽时，默认插入占位node
       return node
     })
     // update dataTransfer
@@ -447,9 +448,19 @@ export class Mouse {
       this.dataTransfer = insertNodes
     }
     if (isContainer) {
-      insertBefore
-        ? targetNode.children.unshift(...insertNodes)
-        : targetNode.children.push(...insertNodes)
+      // if (this.droppable && !this.placeholder && !node.children?.length) {
+      //   const placeholderNode = new DtdNode({ componentName: DefaultComponentName, props: {
+      //     [DTD_BASE_KEY]: this.dragId
+      //   }, children: [], droppable: true, placeholder: true }, this)
+      //   this.children = [placeholderNode]
+      // }
+      if (parent.children.find(node => node.placeholder)) {
+        parent.children = insertNodes
+      } else {
+        insertBefore
+          ? targetNode.children.unshift(...insertNodes)
+          : targetNode.children.push(...insertNodes)
+      }
     } else {
       parent.children.splice(
         parent.children.findIndex(

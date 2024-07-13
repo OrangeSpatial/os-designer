@@ -100,7 +100,7 @@ onBeforeUnmount(() => {
       <slot
         name="ghost"
         v-if="carryNode.length"
-        :items="carryNode.map(node => node.props)"
+        :items="carryNode"
       />
     </dtd-ghost>
   </div>

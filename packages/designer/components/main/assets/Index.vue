@@ -5,7 +5,7 @@
                 <template #default="{ item }">
                     <div class="copy-item">
                         <div class="dtd-copy-icon"></div>
-                        <div class="dtd-node-name">{{ item.props?.componentName }}</div>
+                        <div class="dtd-node-name">{{ item?.componentName }}</div>
                     </div>
                 </template>
             </DragToDrop>
@@ -15,7 +15,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, inject, ref } from "vue";
+import { AssetsKeyByIdSymbol } from "../../../common/injectSymbol";
 
 const props = defineProps<{
     assets: any[]
@@ -30,6 +31,8 @@ const categories = computed(() => {
         return acc
     }, {})
 })
+
+const assetsById = inject(AssetsKeyByIdSymbol, {})
 
 const activeKey = ref(Object.keys(categories.value))
 

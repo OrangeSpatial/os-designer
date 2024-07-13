@@ -1,8 +1,8 @@
 <template>
     <div :class="genCls('designer-right-side')">
         <os-tabs :options="tabOptions" v-model="activeTabName" />
-        <div>{{ currentNode.props?.componentName }}</div>
-        <div v-for="item in currentNode.props?.configure.props || []" :key="item.name">
+        <div>{{ currentNode?.componentName }}</div>
+        <div v-for="item in configure.props || []" :key="item.name">
             <div>{{ item.title }}: {{ item.name }}</div>
         </div>
     </div>
@@ -12,13 +12,15 @@
 import { ref, inject, computed, Ref } from "vue";
 import { genCls } from "@oragspatl/dragger-vue";
 import OsTabs from "./Tabs.vue";
-import { SelectedNodesSymbol } from "../../../common/injectSymbol";
+import { AssetsKeyByIdSymbol, SelectedNodesSymbol } from "../../../common/injectSymbol";
 import { ISelectNode } from "../../../types/node";
 
 const tabOptions = ref(['属性', '事件'])
 const activeTabName = ref('属性')
 
+const assetsById = inject(AssetsKeyByIdSymbol, {})
 const currentNode = computed(() => selectedNodes.value[0]?.node || {})
+const configure = computed(() => assetsById[currentNode.value.id]?.configure || {})
 
 const selectedNodes = inject<Ref<ISelectNode[]>>(SelectedNodesSymbol, ref([]))
 </script>

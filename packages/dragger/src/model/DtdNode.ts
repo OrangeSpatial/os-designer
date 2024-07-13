@@ -1,10 +1,12 @@
-import { uid } from '../common'
 import { DragNodeType } from './Mouse'
 
 interface IDtdNode {
   dragId?: string
+  slotName?: string
+  id?: string // componentId
+  componentName?: string
   droppable?: boolean
-  dragType?: DragNodeType
+  placeholder?: boolean
   props?: Record<string | number | symbol, any>
   children: IDtdNode[]
 }
@@ -16,14 +18,19 @@ export enum NodeLayout {
 
 const TreeNodes = new Map<string, DtdNode>()
 
+export const DefaultComponentName = 'div'
+
 export class DtdNode {
   root!: DtdNode
   parent!: DtdNode
   depth = 0
   dragId!: string
+  componentId!: string
+  componentName: string = DefaultComponentName
+  slotName?: string
   dragType: DragNodeType = DragNodeType.MOVE
+  placeholder = false
   droppable = false
-  disabled = false
   props: IDtdNode['props'] = {}
   children: DtdNode[] = []
 
@@ -42,15 +49,15 @@ export class DtdNode {
     }
 
     if (node) {
-      this.props = node.props || node
-      if (node.droppable) this.droppable = node.droppable
-      if (
-        node.dragType &&
-        Object.values(DragNodeType).includes(node.dragType)
-      ) {
-        this.dragType = node.dragType
-      }
-      this.children = (node?.children || []).map(
+      this.props = node.props || {}
+      this.slotName = node.slotName
+      this.componentId = node.id || `node_${uid()}`
+      this.componentName =
+        node.componentName || DefaultComponentName
+      if (node.placeholder) this.placeholder = node.placeholder
+      if (node.droppable)
+        this.droppable = node.droppable || this.placeholder
+      this.children = (node.children || []).map(
         child => new DtdNode(child, this)
       )
     }
@@ -80,10 +87,12 @@ export class DtdNode {
   static getIDtdNode(node: DtdNode): IDtdNode {
     return {
       dragId: node.dragId,
-      droppable: node.droppable,
-      dragType: node.dragType,
       props: node.props,
-      children: node.children.map(child => DtdNode.getIDtdNode(child))
+      componentName: node.componentName,
+      slotName: node.droppable ? 'default' : undefined,
+      children: node.children.map(child =>
+        DtdNode.getIDtdNode(child)
+      )
     }
   }
 
@@ -98,15 +107,26 @@ export class DtdNode {
 
   // 判断节点是否是自己或者父节点
   isParentOf(node: DtdNode): boolean {
-    return node == this || (node.parent && this.isParentOf(node.parent))
+    return (
+      node == this ||
+      (node.parent && this.isParentOf(node.parent))
+    )
   }
 }
 
-function deleteNodeFromParentByDragId(parent: DtdNode, dragId: string) {
-  parent.children = parent.children.filter(child => child.dragId !== dragId)
+function deleteNodeFromParentByDragId(
+  parent: DtdNode,
+  dragId: string
+) {
+  parent.children = parent.children.filter(
+    child => child.dragId !== dragId
+  )
 }
 
-export function deleteNode(node: DtdNode | DtdNode[], deleteCache = false) {
+export function deleteNode(
+  node: DtdNode | DtdNode[],
+  deleteCache = false
+) {
   if (!node) return
   if (Array.isArray(node)) {
     node.forEach(n => deleteNode(n))

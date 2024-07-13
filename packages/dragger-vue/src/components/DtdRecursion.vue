@@ -23,10 +23,13 @@ withDefaults(
     v-for="n in node.children"
     :key="n.dragId"
     :data="n"
-    :disabled="n.disabled"
   >
     <slot :item="n"></slot>
-    <DtdRecursion :nodeClass v-if="n.children?.length" :node="n">
+    <DtdRecursion
+      :nodeClass
+      v-if="n.children?.length"
+      :node="n"
+    >
       <template #default="{ item: node }">
         <slot :item="node"></slot>
       </template>

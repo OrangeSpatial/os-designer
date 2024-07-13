@@ -2,23 +2,39 @@ import { VNode, h } from 'vue'
 import { registeredComponents } from './registryComponents'
 
 export function schemaRender(
-  schema: any,
-  dragId?: string
-): VNode {
-  let children = schema.children
-  if (Array.isArray(children)) {
-    children =
-      schema.children?.map((child: any) =>
-        schemaRender(child)
-      ) || []
-  }
+  schema: any | any[]
+): VNode | VNode[] | string {
+  if (typeof schema === 'string') return schema
+  if (Array.isArray(schema)) {
+    return schema.map((child: any) =>
+      schemaRender(child)
+    ) as VNode[]
+  } else return renderNode(schema)
+}
+
+export function renderNode(node: any): VNode {
   return h(
-    registeredComponents.get(schema.componentName) ||
-      schema.componentName,
+    registeredComponents.get(node.componentName) ||
+      node.componentName,
     {
-      ...schema.props,
-      key: dragId
+      ...node.props,
+      key: node.dragId
     },
-    children
+    () => {
+      let children = node.children
+      if (Array.isArray(children)) {
+        children =
+          children.map((child: any) => schemaRender(child)) ||
+          []
+      } else if (typeof children === 'object') {
+        const slots = Reflect.ownKeys(children)
+        if (slots.length) {
+          slots.forEach(slot => {
+            children[slot] = () => schemaRender(children[slot])
+          })
+        } else children = []
+      }
+      return children
+    }
   )
 }

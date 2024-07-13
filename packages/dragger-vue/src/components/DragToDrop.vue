@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import {
+  computed,
   inject,
   nextTick,
   onBeforeUnmount,
   onMounted,
-  ref
+  ref,
+  watchEffect
 } from 'vue'
 import DtdRecursion from './DtdRecursion.vue'
 import DtdItem from './DtdItem.vue'
@@ -20,7 +22,7 @@ import {
 } from '@oragspatl/dragger'
 import { cursorAtContainerEdgeType } from '@oragspatl/dragger'
 import { DTD_MOUSE } from '../common/injectSymbol'
-import { treePreProcess } from '../common/treePreProcess'
+// import { treePreProcess } from '../common/treePreProcess'
 
 defineOptions({
   name: 'DragToDrop'
@@ -28,7 +30,7 @@ defineOptions({
 
 const props = withDefaults(
   defineProps<{
-    data: any[]
+    data: any
     nodeClass?: string
     dragType?: DragNodeType
     dtdClass?: string
@@ -44,12 +46,14 @@ const emits = defineEmits(['change'])
 
 const dtdData = ref(new DtdNode({ children: [] }))
 
+const isRenderData = computed(() => !Array.isArray(props.data))
+
 const mouse = inject<Mouse>(DTD_MOUSE)
 
 function updateViewData(callback?: () => void) {
   nextTick(() => {
-    emits('change', getData())
     dtdData.value = dtdData.value.clone()
+    emits('change', dtdData.value)
     callback?.()
   })
 }
@@ -138,15 +142,14 @@ onBeforeUnmount(() => {
   DtdNode.clearCacheAll()
 })
 
-function init() {
-  const root = DtdNode.fromList(
-    treePreProcess(props.data) || []
-  )
+watchEffect(() => {
+  const root = isRenderData.value
+    ? new DtdNode(props.data || { children: [] })
+    : DtdNode.fromList(props.data)
   root.dragType = props.dragType
   dtdData.value = root
-}
-
-init()
+  emits('change', dtdData.value)
+})
 
 defineExpose({
   getData
@@ -155,22 +158,32 @@ defineExpose({
 
 <template>
   <div ref="rootRef" class="dtd-render-root">
-    <dtd-item
-      :data="dtdData"
-      :disabled="dtdData.disabled"
-      class="full"
-      :class="props.dtdClass || ''"
-    >
-      <DtdRecursion :nodeClass :node="dtdData">
-        <template #default="{ item }">
-          <slot :item="item" />
-        </template>
-      </DtdRecursion>
-      <dtd-aux-tool
-        v-if="dtdData.dragType === DragNodeType.MOVE"
-        :scrollPosition
-      />
-    </dtd-item>
+    <template v-if="isRenderData">
+      <dtd-item
+        :data="dtdData"
+        class="full"
+        :class="props.dtdClass || ''"
+      >
+        <slot />
+        <dtd-aux-tool
+          v-if="dtdData.dragType === DragNodeType.MOVE"
+          :scrollPosition
+        />
+      </dtd-item>
+    </template>
+    <template v-else>
+      <dtd-item
+        :data="dtdData"
+        class="full"
+        :class="props.dtdClass || ''"
+      >
+        <DtdRecursion :nodeClass :node="dtdData">
+          <template #default="{ item }">
+            <slot :item="item" />
+          </template>
+        </DtdRecursion>
+      </dtd-item>
+    </template>
   </div>
 </template>
 
